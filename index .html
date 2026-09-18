@@ -11,97 +11,181 @@
             padding: 0;
             user-select: none;
             -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
         body, html {
             width: 100%;
             height: 100%;
             overflow: hidden;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #2c1a1d;
+            background: #111;
         }
         #game-container {
             width: 100%;
             height: 100%;
             position: relative;
         }
+
+        /* =========================
+           واجهة أثناء اللعب العلوي
+        ========================= */
         #ui-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            position: fixed;
+            inset: 0;
             pointer-events: none;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 20px;
-            z-index: 10;
-        }
-        .scoreboard {
-            color: #ffffff;
-            font-size: 20px;
-            font-weight: 800;
-            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-        .score-box {
-            background: rgba(0, 0, 0, 0.4);
-            padding: 8px 16px;
-            border-radius: 20px;
-            width: fit-content;
-            backdrop-filter: blur(4px);
-        }
-        .score-val {
-            color: #FFD700;
-        }
-        #game-over-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(20, 10, 15, 0.85);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.4s ease;
             z-index: 20;
         }
-        #game-over-screen.active {
-            opacity: 1;
-            pointer-events: auto;
+
+        #score-box {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            min-width: 130px;
+            padding: 10px 18px;
+            border-radius: 18px;
+            background: rgba(90, 50, 20, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            color: #fff;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
         }
-        #game-over-screen h1 {
-            color: #FF4500;
-            font-size: 42px;
-            margin-bottom: 10px;
-            text-shadow: 0 0 15px rgba(255, 69, 0, 0.6);
+
+        #coins-box {
+            position: absolute;
+            top: 72px;
+            right: 18px;
+            min-width: 130px;
+            padding: 8px 16px;
+            border-radius: 16px;
+            background: rgba(90, 50, 20, 0.75);
+            border: 1px solid rgba(255, 215, 80, 0.3);
+            backdrop-filter: blur(8px);
+            color: #ffd84d;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
         }
-        #game-over-screen p {
-            color: #ffffff;
-            font-size: 22px;
-            margin-bottom: 10px;
-        }
-        .restart-btn {
-            background: linear-gradient(45deg, #FF8C00, #FFD700);
-            color: #111;
+
+        #pause-btn {
+            position: absolute;
+            top: 18px;
+            left: 18px;
+            width: 48px;
+            height: 48px;
             border: none;
-            padding: 16px 45px;
-            font-size: 24px;
-            font-weight: 900;
-            border-radius: 40px;
+            border-radius: 12px;
+            background: rgba(90, 50, 20, 0.75);
+            color: white;
+            font-size: 20px;
+            pointer-events: auto;
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(255, 140, 0, 0.5);
-            margin-top: 20px;
-            transition: transform 0.1s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
         }
-        .restart-btn:active {
-            transform: scale(0.92);
+
+        /* =========================
+           الشاشات والمنبثقات
+        ========================= */
+        .screen {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+            background: linear-gradient(135deg, #f1a278, #d97736);
+            color: white;
+        }
+
+        .panel {
+            width: min(420px, 92vw);
+            padding: 35px 25px;
+            border-radius: 28px;
+            text-align: center;
+            background: rgba(25, 18, 12, 0.82);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 22px;
+            background: linear-gradient(145deg, #ffb74d, #f57c00);
+            font-size: 40px;
+            box-shadow: 0 10px 25px rgba(245, 124, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.75);
+            line-height: 1.6;
+            margin-bottom: 22px;
+        }
+
+        .best-score {
+            margin-bottom: 20px;
+            color: #ffd76a;
+            font-weight: bold;
+        }
+
+        .main-btn {
+            width: 100%;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #ffb74d, #f57c00);
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(245, 124, 0, 0.3);
+        }
+
+        .secondary-btn {
+            width: 100%;
+            padding: 13px 18px;
+            margin-top: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .result-number {
+            font-size: 36px;
+            color: #ffd76a;
+            font-weight: bold;
+            margin: 10px 0 18px;
+        }
+
+        @media(max-width: 600px) {
+            h1 { font-size: 28px; }
+            .panel { padding: 28px 18px; }
+            #score-box { top: 14px; right: 14px; font-size: 16px; min-width: 110px; }
+            #coins-box { top: 65px; right: 14px; font-size: 14px; min-width: 110px; }
+            #pause-btn { top: 14px; left: 14px; }
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -109,28 +193,65 @@
 <body>
 
     <div id="game-container">
-        <div id="ui-layer">
-            <div class="scoreboard">
-                <div class="score-box">النقاط: <span id="current-score" class="score-val">0</span></div>
-                <div class="score-box">الذهب: 🟡 <span id="coins-count" class="score-val">0</span></div>
+        <!-- شاشة البداية -->
+        <div id="start-screen" class="screen">
+            <div class="panel">
+                <div class="logo">🏜️</div>
+                <h1>Desert Runner</h1>
+                <p class="subtitle">
+                    اركض، اقفز، اجمع العملات...
+                    <br>
+                    وحاول البقاء لأطول وقت ممكن! 🔥
+                </p>
+                <div class="best-score">
+                    أفضل نتيجة: <span id="best-score">0</span>
+                </div>
+                <button id="start-btn" class="main-btn">▶ ابدأ اللعب</button>
             </div>
         </div>
 
-        <div id="game-over-screen">
-            <h1>انتهت اللعبة!</h1>
-            <p>النتيجة: <span id="final-score" class="score-val">0</span></p>
-            <p>العملات: 🟡 <span id="final-coins" class="score-val">0</span></p>
-            <button class="restart-btn" id="restart-btn">إعادة اللعب</button>
+        <!-- شاشة الإيقاف المؤقت -->
+        <div id="pause-screen" class="screen hidden">
+            <div class="panel">
+                <div class="logo">⏸️</div>
+                <h1>اللعبة متوقفة</h1>
+                <p class="subtitle">خذ نفسًا... ثم تابع المغامرة 😎</p>
+                <button id="resume-btn" class="main-btn">▶ متابعة</button>
+                <button id="restart-btn-pause" class="secondary-btn">🔄 إعادة اللعب</button>
+                <button id="home-btn-pause" class="secondary-btn">🏠 الرئيسية</button>
+            </div>
+        </div>
+
+        <!-- شاشة الخسارة -->
+        <div id="game-over-screen" class="screen hidden">
+            <div class="panel">
+                <div class="logo">💥</div>
+                <h1>انتهت اللعبة</h1>
+                <p class="subtitle">وصلت إلى:</p>
+                <div class="result-number"><span id="final-score">0</span></div>
+                <p class="best-score">أفضل نتيجة: <span id="final-best-score">0</span></p>
+                <button id="restart-btn" class="main-btn">🔄 العب من جديد</button>
+                <button id="home-btn" class="secondary-btn">🏠 الرئيسية</button>
+            </div>
+        </div>
+
+        <!-- الواجهة أثناء اللعب -->
+        <div id="ui-layer">
+            <div id="score-box">النقاط: <span id="score">0</span></div>
+            <div id="coins-box">الذهب: <span id="coins">0</span> 🟡</div>
+            <button id="pause-btn">⏸</button>
         </div>
     </div>
 
     <script>
+        let gameState = "menu";
+        let score = 0, collectedCoins = 0;
+        let bestScore = Number(localStorage.getItem("desertRunnerBest") || 0);
+
         let scene, camera, renderer;
         let playerGroup, leftArm, rightArm, leftLeg, rightLeg;
         let obstacles = [], coins = [], scenery = [];
 
-        let score = 0, collectedCoins = 0;
-        let isGameOver = false;
         let gameSpeed = 0.8;
         let frameCount = 0;
 
@@ -143,6 +264,24 @@
         const gravity = -0.022;
 
         let touchStartX = 0, touchStartY = 0;
+
+        const startScreen = document.getElementById("start-screen");
+        const pauseScreen = document.getElementById("pause-screen");
+        const gameOverScreen = document.getElementById("game-over-screen");
+
+        const startBtn = document.getElementById("start-btn");
+        const pauseBtn = document.getElementById("pause-btn");
+        const resumeBtn = document.getElementById("resume-btn");
+        const restartBtn = document.getElementById("restart-btn");
+        const restartBtnPause = document.getElementById("restart-btn-pause");
+        const homeBtn = document.getElementById("home-btn");
+        const homeBtnPause = document.getElementById("home-btn-pause");
+
+        const scoreElement = document.getElementById("score");
+        const coinsElement = document.getElementById("coins");
+        const bestScoreElement = document.getElementById("best-score");
+        const finalScoreElement = document.getElementById("final-score");
+        const finalBestScoreElement = document.getElementById("final-best-score");
 
         function init() {
             const container = document.getElementById('game-container');
@@ -175,8 +314,7 @@
             window.addEventListener('resize', onWindowResize);
             setupControls();
 
-            document.getElementById('restart-btn').addEventListener('click', restartGame);
-
+            bestScoreElement.textContent = bestScore;
             animate();
         }
 
@@ -214,6 +352,7 @@
                 scene.add(mountain);
             }
         }
+
         function createPlayer() {
             playerGroup = new THREE.Group();
 
@@ -340,7 +479,7 @@
             }, { passive: true });
 
             window.addEventListener('touchend', (e) => {
-                if (isGameOver) return;
+                if (gameState !== "playing") return;
                 let diffX = e.changedTouches[0].clientX - touchStartX;
                 let diffY = e.changedTouches[0].clientY - touchStartY;
 
@@ -357,15 +496,66 @@
             }, { passive: true });
 
             window.addEventListener('keydown', (e) => {
-                if (isGameOver) return;
-                if (e.key === 'ArrowLeft' && currentLane > 0) currentLane--;
-                if (e.key === 'ArrowRight' && currentLane < 2) currentLane++;
-                if (e.key === 'ArrowUp' && !isJumping) {
+                if (gameState !== "playing") return;
+                if ((e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') && currentLane > 0) currentLane--;
+                if ((e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') && currentLane < 2) currentLane++;
+                if ((e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W' || e.key === ' ') && !isJumping) {
                     isJumping = true;
                     jumpVelocity = 0.4;
                 }
                 targetX = lanes[currentLane];
             });
+
+            startBtn.addEventListener("click", startGame);
+            pauseBtn.addEventListener("click", pauseGame);
+            resumeBtn.addEventListener("click", resumeGame);
+            restartBtn.addEventListener("click", startGame);
+            restartBtnPause.addEventListener("click", startGame);
+            homeBtn.addEventListener("click", showHome);
+            homeBtnPause.addEventListener("click", showHome);
+        }
+
+        function startGame() {
+            score = 0;
+            collectedCoins = 0;
+            gameSpeed = 0.8;
+            currentLane = 1;
+            targetX = lanes[currentLane];
+            isJumping = false;
+
+            [...obstacles, ...coins, ...scenery].forEach(item => scene.remove(item));
+            obstacles = []; coins = []; scenery = [];
+
+            playerGroup.position.set(lanes[currentLane], 0, 0);
+            scoreElement.innerText = 0;
+            coinsElement.innerText = 0;
+
+            startScreen.classList.add("hidden");
+            pauseScreen.classList.add("hidden");
+            gameOverScreen.classList.add("hidden");
+
+            gameState = "playing";
+        }
+
+                function pauseGame() {
+            if (gameState === "playing") {
+                gameState = "paused";
+                pauseScreen.classList.remove("hidden");
+            }
+        }
+
+        function resumeGame() {
+            if (gameState === "paused") {
+                gameState = "playing";
+                pauseScreen.classList.add("hidden");
+            }
+        }
+
+        function showHome() {
+            gameState = "menu";
+            startScreen.classList.remove("hidden");
+            pauseScreen.classList.add("hidden");
+            gameOverScreen.classList.add("hidden");
         }
 
         function updatePlayer() {
@@ -381,7 +571,7 @@
                 }
             }
 
-            if (!isGameOver) {
+            if (gameState === "playing") {
                 const time = Date.now() * 0.018;
                 const swing = Math.sin(time) * 0.7;
                 leftArm.rotation.x = swing;
@@ -418,7 +608,7 @@
 
                 if (checkCoinCollect(playerGroup, coin)) {
                     collectedCoins++;
-                    document.getElementById('coins-count').innerText = collectedCoins;
+                    coinsElement.innerText = collectedCoins;
                     scene.remove(coin);
                     coins.splice(i, 1);
                     continue;
@@ -454,25 +644,16 @@
         }
 
         function triggerGameOver() {
-            isGameOver = true;
-            document.getElementById('final-score').innerText = Math.floor(score / 5);
-            document.getElementById('final-coins').innerText = collectedCoins;
-            document.getElementById('game-over-screen').classList.add('active');
-        }
-
-        function restartGame() {
-            [...obstacles, ...coins, ...scenery].forEach(item => scene.remove(item));
-            obstacles = []; coins = []; scenery = [];
-            score = 0; collectedCoins = 0; gameSpeed = 0.8; currentLane = 1;
-            targetX = lanes[currentLane]; isJumping = false;
-
-            playerGroup.position.set(lanes[currentLane], 0, 0);
-            document.getElementById('current-score').innerText = 0;
-            document.getElementById('coins-count').innerText = 0;
-            document.getElementById('game-over-screen').classList.remove('active');
-
-            isGameOver = false;
-            animate();
+            gameState = "gameover";
+            const finalScoreVal = Math.floor(score / 5);
+            if (finalScoreVal > bestScore) {
+                bestScore = finalScoreVal;
+                localStorage.setItem("desertRunnerBest", bestScore);
+            }
+            finalScoreElement.innerText = finalScoreVal;
+            finalBestScoreElement.innerText = bestScore;
+            bestScoreElement.innerText = bestScore;
+            gameOverScreen.classList.remove("hidden");
         }
 
         function onWindowResize() {
@@ -482,14 +663,15 @@
         }
 
         function animate() {
-            if (isGameOver) return;
             requestAnimationFrame(animate);
 
-            updatePlayer();
-            updateWorld();
+            if (gameState === "playing") {
+                updatePlayer();
+                updateWorld();
 
-            score++;
-            document.getElementById('current-score').innerText = Math.floor(score / 5);
+                score++;
+                scoreElement.innerText = Math.floor(score / 5);
+            }
 
             renderer.render(scene, camera);
         }
