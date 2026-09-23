@@ -39,7 +39,7 @@
             display: flex;
             justify-content: center;
             min-height: 100vh;
-            user-select: none; /* حماية المحتوى */
+            user-select: none;
         }
 
         .app-container {
@@ -53,7 +53,6 @@
             box-shadow: 0 0 20px rgba(0,0,0,0.5);
         }
 
-        /* الهيدر العلوي */
         header {
             display: flex;
             align-items: center;
@@ -91,7 +90,6 @@
             color: var(--accent-color);
         }
 
-        /* شريط البحث */
         .search-bar {
             display: none;
             padding: 10px 15px;
@@ -114,7 +112,6 @@
             outline: none;
         }
 
-        /* القوائم المنبثقة */
         .modal {
             display: none;
             position: fixed;
@@ -288,7 +285,6 @@
             overflow: hidden;
         }
 
-        /* صفحة القراءة */
         .reader-header {
             display: flex;
             align-items: center;
@@ -311,7 +307,6 @@
             user-select: text;
         }
 
-        /* شريط التنقل السفلي */
         nav.bottom-nav {
             position: fixed;
             bottom: 0;
@@ -365,33 +360,29 @@
 <body>
 
 <div class="app-container">
-    <!-- الهيدر العلوي -->
     <header id="main-header">
         <button class="icon-btn" onclick="filterBookmarks()"><i id="header-bookmark-icon" class="fa-regular fa-bookmark"></i></button>
         <div class="header-title" id="header-title">عالم القصص والروايات</div>
         <div class="header-icons">
             <button class="icon-btn" onclick="openChaptersListModal()"><i class="fa-solid fa-list-ul"></i></button>
             <button class="icon-btn" onclick="toggleSearch()"><i class="fa-solid fa-magnifying-glass"></i></button>
-            <!-- زر الخيارات المباشر لتبديل اللغات (...) -->
             <button class="icon-btn" onclick="openLangModal()"><i class="fa-solid fa-ellipsis-vertical"></i></button>
         </div>
     </header>
 
-    <!-- شريط البحث المخفي -->
     <div class="search-bar" id="search-bar">
         <input type="text" id="search-input" placeholder="ابحث..." oninput="filterChapters()">
         <button class="icon-btn" onclick="toggleSearch()"><i class="fa-solid fa-xmark"></i></button>
     </div>
 
     <main>
-        <!-- الرئيسية -->
         <section id="page-home" class="page active">
             <div class="series-tabs" id="series-tabs"></div>
 
             <div class="hero-card" id="hero-card">
                 <div class="hero-content">
                     <div class="hero-badge" id="hero-badge-text"><i class="fa-solid fa-star"></i> السلسلة الحالية</div>
-                    <div class="hero-title" id="hero-title">سرمد</div>
+                    <div class="hero-title" id="hero-title">الباب الأزرق</div>
                 </div>
             </div>
 
@@ -399,7 +390,6 @@
             <div id="chapters-list"></div>
         </section>
 
-        <!-- صفحة القراءة -->
         <section id="page-reader" class="page">
             <div class="reader-header">
                 <button class="icon-btn" id="reader-back-btn" onclick="showPage('home')"><i class="fa-solid fa-chevron-right"></i></button>
@@ -410,19 +400,18 @@
         </section>
     </main>
 
-    <!-- نافذة اللغات (...) -->
     <div class="modal" id="lang-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="lang-modal-title">تغيير اللغة / Select Language</h3>
+                <h3 id="lang-modal-title">تغيير اللغة / Change Language</h3>
                 <button class="icon-btn" onclick="closeModal('lang-modal')"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <button class="lang-btn" onclick="setLanguage('ar')">العربية (Arabic)</button>
             <button class="lang-btn" onclick="setLanguage('en')">English (الإنجليزية)</button>
+            <button class="lang-btn" onclick="setLanguage('es')">Español (الإسبانية)</button>
         </div>
     </div>
 
-    <!-- نافذة منبثقة لقائمة الفصول -->
     <div class="modal" id="list-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -433,7 +422,6 @@
         </div>
     </div>
 
-    <!-- نافذة إعدادات القراءة -->
     <div class="modal" id="settings-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -447,7 +435,6 @@
         </div>
     </div>
 
-    <!-- شريط التنقل السفلي -->
     <nav class="bottom-nav">
         <button class="nav-item active" id="nav-home" onclick="setActiveNav('nav-home'); showPage('home'); resetFilter();">
             <i class="fa-solid fa-book-open"></i>
@@ -462,10 +449,8 @@
             <span id="lbl-bookmarks">العلامات</span>
         </button>
     </nav>
-</div>
-
-<script>
-    // تطهير النص لمنع أية ثغرات امنية XSS
+    </div>
+    <script>
     function sanitize(str) {
         const temp = document.createElement('div');
         temp.textContent = str;
@@ -494,116 +479,389 @@
             searchPlaceholder: "Search chapter...",
             allChapters: "All Chapters",
             fontSettings: "Font Size"
+        },
+        es: {
+            title: "Mundo de Historias y Novelas",
+            currentSeries: "Serie Actual",
+            discover: "Descubre tu Próxima Historia",
+            reading: "Lectura",
+            chapters: "Capítulos",
+            bookmarks: "Marcadores y Favoritos",
+            searchPlaceholder: "Buscar capítulo...",
+            allChapters: "Todos los Capítulos",
+            fontSettings: "Tamaño de Fuente"
         }
     };
 
     let currentLang = localStorage.getItem('app_lang') || 'ar';
 
-    // قاعدة بيانات القصص الفعليه
     const data = {
         series: [
-            { id: 'sarmad', nameAr: 'سرمَد', nameEn: 'Sarmad', image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=600' },
-            { id: 'ticket', nameAr: 'التذكرة المفقودة', nameEn: 'The Missing Ticket', image: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=600' },
-            { id: 'blue', nameAr: 'الياقوتة الزرقاء', nameEn: 'The Blue Sapphire', image: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?q=80&w=600' }
+            { id: 'blue_door', nameAr: 'الباب الأزرق', nameEn: 'The Blue Door', nameEs: 'La Puerta Azul', image: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=600' },
+            { id: 'signal', nameAr: 'الإشارة', nameEn: 'The Signal', nameEs: 'La Señal', image: 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=600' },
+            { id: 'promise', nameAr: 'الوعد', nameEn: 'The Promise', nameEs: 'La Promesa', image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=600' },
+            { id: 'package', nameAr: 'الطرد الغريب', nameEn: 'The Strange Parcel', nameEs: 'El Paquete Extraño', image: 'https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=600' },
+            { id: 'window', nameAr: 'النافذة', nameEn: 'The Window', nameEs: 'La Ventana', image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=600' },
+            { id: 'forest', nameAr: 'الغابة السابعة', nameEn: 'The Seventh Forest', nameEs: 'El Séptimo Bosque', image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=600' },
+            { id: 'midnight', nameAr: 'مدينة منتصف الليل', nameEn: 'Midnight City', nameEs: 'Ciudad de Medianoche', image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=600' }
         ],
         chapters: [
-            /* قصة سرمد */
+            /* القصة 1: الباب الأزرق */
             {
                 id: 101,
-                seriesId: 'sarmad',
-                titleAr: 'الفصل الأول: النداء القادم من الفراغ',
-                titleEn: 'Chapter 1: The Call from the Void',
-                descAr: 'في عام 2084، داخل محطة الأبحاث الفضائية "ألفا"، التقط عالم الفلك دانيال إشارة صوتية غريبة...',
-                descEn: 'In 2084, inside the Alpha research station, astronomer Daniel detected a mysterious audio signal...',
-                contentAr: `في عام 2084، داخل محطة الأبحاث الفضائية المعزولة "ألفا"، كان عالم الفلك دانيال يقضي لياليه أمام شاشات الرصد العملاقة، يراقب الثقوب السوداء وموت النجوم. كانت حياته روتينية مملة، حتى تلك الليلة التي التقطت فيها أجهزة الاستشعار إشارة صوتية غريبة وقوية قادمة من أعمق نقطة مظلمة في المجرة، نقطة كان العلماء يظنونها فراغاً مطلقاً.
-
-لم تكن الإشارة مجرد موجات عشوائية، بل كانت نبضات منتظمة تشبه دقات قلب كوني. عندما قام دانيال بتحليل الشفرة الصوتية وتحويلها إلى لغة رقمية، ظهرت على الشاشة كلمة واحدة مكررة باللغة العربية القديمة: "سرمد" (والتي تعني الأبدي الذي لا بداية له ولا نهاية).
-
-أصيب دانيال بالذهول؛ كيف لاسم يحمل معنى الأزلية أن يأتي من مكان لم يصله بشر قط؟ والأغرب من ذلك، أنه كلما استمع إلى النبض الصوتي، كان يشعر بذكائه يتضاعف، وبأن ذكرياته المنسية عن طفولته وبداية البشرية بدأت تتدفق في عقله دفعة واحدة. قرر دانيال، دون أخذ إذن من القيادة الأرضية، أن يوجه مركبة الاستكشاف الصغيرة الخاصة به نحو مصدر الإشارة، مدفوعاً بفضول غير بشري.`,
-                contentEn: `In the year 2084, inside the isolated "Alpha" space research station, astronomer Daniel spent his nights monitoring black holes and dying stars. His life was routine until the night sensors picked up a powerful audio signal from the deepest dark point in the galaxy.
-
-The signal was a pulse repeating a single word in ancient Arabic: "Sarmad" (meaning Eternity). Daniel, driven by intense curiosity, guided his exploration vessel toward the signal's source without authorization.`
+                seriesId: 'blue_door',
+                titleAr: 'الفصل الأول: الباب الأزرق',
+                titleEn: 'Chapter 1: The Blue Door',
+                titleEs: 'Capítulo 1: La Puerta Azul',
+                descAr: 'كان سامر يحب استكشاف الأماكن القديمة، حتى وجد باباً أزرق صغيراً في جدار حجري قديم...',
+                descEn: 'Samer loved exploring old places until he found a small blue door set in an old stone wall...',
+                descEs: 'A Samer le encantaba explorar lugares antiguos hasta que encontró una pequeña puerta azul en un viejo muro...',
+                contentAr: `كان سامر يحب استكشاف الأماكن القديمة في مدينته.
+وفي صباح يومٍ شتوي، وبينما كان يسير قرب محطة القطار المهجورة، لاحظ شيئًا لم يره من قبل.
+باب أزرق صغير، مثبت في جدار حجري قديم.
+اقترب منه.
+لم يكن للباب مقبض، ولا نافذة، ولا أي علامة تدل على المكان الذي يؤدي إليه.
+لكن في منتصفه كانت هناك جملة محفورة:
+"لا تفتحني إلا إذا كنت مستعدًا لمعرفة ما تبحث عنه."
+ضحك سامر: "ومن قال إنني أبحث عن شيء؟"
+وضع يده على الباب، وفجأة ظهر مقبض فضي. فتح الباب، وخلفه لم تكن هناك غرفة، بل طريق طويل تحيط به أشجار مضيئة، وفي السماء قمر ضخم بلون أزرق.
+وسمع صوتًا خلفه: "أخيرًا وجدته." كانت فتاة تسمى ليان، وقالت: "هذا الباب لا يظهر إلا لشخصين… دخلت وتبعتها، وأُغلق الباب خلفهما واختفى.`,
+                contentEn: `Samer loved exploring old places in his city. On a cold winter morning near an abandoned train station, he found a small blue door with an engraved sentence: "Do not open me unless you are ready to know what you are looking for."
+Upon touching it, a silver handle appeared. Opening it revealed a path surrounded by glowing trees under a giant blue moon. A girl named Layan joined him, explaining the door only appears to two people. Together, they stepped through as the door vanished behind them.`,
+                contentEs: `A Samer le encantaba explorar lugares antiguos. En una mañana de invierno cerca de una estación abandonada, encontró una pequeña puerta azul con una frase grabada: "No me abras a menos que estés listo para saber qué buscas."
+Al tocarla, apareció un pomo de plata. Al abrirla, reveló un camino rodeado de árboles brillantes bajo una enorme luna azul. Una chica llamada Layan se le unió, explicando que la puerta solo se muestra a dos personas. Juntos cruzaron mientras la puerta desaparecía tras ellos.`
             },
             {
                 id: 102,
-                seriesId: 'sarmad',
-                titleAr: 'الفصل الثاني: مرآة الأزَل',
-                titleEn: 'Chapter 2: The Mirror of Eternity',
-                descAr: 'وصل دانيال إلى الإحداثيات المحددة، ليجد كتلة بلورية عملاقة تشبه مرآة كونية ضخمة...',
-                descEn: 'Daniel arrived at the coordinates to find a giant crystal mass floating in space...',
-                contentAr: `بعد رحلة استغرقت أسابيع عبر بوابات زمنية مصغرة، وصل دانيال إلى الإحداثيات المحددة. لم يجد كوكباً ولا مركبة فضائية، بل وجد كتلة بلورية عملاقة عائمة في الفضاء، تلمع بنور أبيض يمتص كل الظلام المحيط بها. كانت الكتلة تشبه مرآة كونية ضخمة.
-
-عندما اقتربت مركبته، انطفأت جميع الأجهزة فجأة، ووجد دانيال نفسه يسير داخل تلك البلورة دون حاجة لبدلة فضاء، وكأنه يسبح في بحر من الوعي الخالص. هناك، لم يلتقِ بكائنات فضائية ذات مجسات، بل التقى بـ نسخة مشعة من نفسه!
-
-تحدث الكيان المشع إلى دانيال، ليس عبر الصوت، بل عبر الأفكار: "أنت هنا لأنك تبحث عن النهاية، بينما الكون كله عبارة عن حلقة سرمدية". فهم دانيال في تلك اللحظة الحقيقة الصادمة؛ لم تكن هذه البلورة كائناً غريباً، بل كانت مكتبة الزمن الكونية. كل فكرة، وكل حضارة بشرية صعدت وسقطت، كانت تُسجل هنا. والنداء الذي التقطه على الأرض لم يكن قادماً من كائن آخر، بل كان نداءً أرسله دانيال "المستقبلي" إلى دانيال "الماضي" ليعيده إلى نقطة البداية.
-
-اختارت البلورة دانيال ليكون حارسها الجديد، "حارس السرمدية"، الذي يراقب توازن الكون وميلاد المجرات. تلاشت مركبة دانيال، وأُعلن في سجلات الأرض أنه "مفقود في الفضاء"، لكنه في الحقيقة لم يختفِ؛ بل أصبح موجوداً في كل زمان ومكان، يراقب النجوم ويهمس للمستكشفين بكلمة واحدة ليرشدهم إلى طريق الأبدية: سرمد.`,
-                contentEn: `After weeks of travel, Daniel reached a crystal structure float ing in space. Entering it, he met a radiant version of himself. He discovered the crystal was a cosmic timeline library, and the call was sent by his future self. Daniel became the new "Guardian of Eternity".`
+                seriesId: 'blue_door',
+                titleAr: 'الفصل الثاني: مدينة بلا ساعات',
+                titleEn: 'Chapter 2: A City Without Clocks',
+                titleEs: 'Capítulo 2: Una Ciudad sin Relojes',
+                descAr: 'سار الاثنان حتى ظهرت أمامهما مدينة غريبة خالية من الساعات...',
+                descEn: 'The two walked until an odd city appeared before them, completely devoid of clocks...',
+                descEs: 'Los dos caminaron hasta que apareció ante ellos una extraña ciudad sin relojes...',
+                contentAr: `سار الاثنان في الطريق حتى ظهرت أمامهما مدينة غريبة. مبانٍ بيضاء مرتفعة، وجسور معلقة، ومصابيح تطير، لكن لم تكن هناك ساعة واحدة.
+أخبرهما رجل عجوز: "هنا المكان الذي تأتي إليه الأشياء التي نسيها البشر… ذكريات ضائعة، وأشخاص."
+وأراهم صورة لفترة منذ عشرين عاماً لفتى يشبه سامر تماماً، وقال العجوز: "هذا والدك. إذا أردتما العودة، فعليكما العثور عليه أولًا قبل أن تنسى المدينة وجودكما."`,
+                contentEn: `They reached a strange city without a single clock. An old man explained it was a place for forgotten things and people. He showed Samer a photo from 20 years ago depicting his father. "If you wish to return, you must find him before the city forgets you exist."`,
+                contentEs: `Llegaron a una extraña ciudad sin un solo reloj. Un anciano explicó que era un lugar para cosas y personas olvidadas. Le mostró a Samer una foto de hace 20 años de su padre. "Si quieren regresar, deben encontrarlo antes de que la ciudad olvide que existen."`
             },
-            /* قصة التذكرة المفقودة */
+            {
+                id: 103,
+                seriesId: 'blue_door',
+                titleAr: 'الفصل الثالث: آخر باب',
+                titleEn: 'Chapter 3: The Last Door',
+                titleEs: 'Capítulo 3: La Última Puerta',
+                descAr: 'وصلا إلى أعلى برج وجدا والد سامر هناك، لتبدأ رحلة العودة الحقيقية...',
+                descEn: 'They reached the highest tower and found Samer\'s father, beginning the true journey back...',
+                descEs: 'Llegaron a la torre más alta y encontraron al padre de Samer, comenzando el viaje de regreso...',
+                contentAr: `في أعلى برج بالمدينة، فتحا الباب بالمفتاح الصغير ووجدا والده. أوضح والده أنه طوال سنوات نسي الطريق بسبب ضياع الذاكرة حتى تذكر أن لديه ابناً ينظره.
+بدأت المدينة تهتز وظهر الباب الأزرق مجدداً. عبر سامر وليان، وعندما أُغلق الباب وجدا نفسيهما عند محطة القطار من جديد، وبجانبه والده قد عاد أيضاً.
+فهم سامر حينها: بعض الأبواب لا تقودنا إلى أماكن جديدة… بل تعيد إلينا أشياء ظننا أننا فقدناها إلى الأبد.`,
+                contentEn: `At top of the tower, they found Samer's father. As the city began to shake, the blue door reappeared. Escaping through it, Samer returned to the station to find his father standing beside him. Some doors don't lead to new places, but bring back what we thought was lost forever.`,
+                contentEs: `En lo alto de la torre, encontraron al padre de Samer. Cuando la ciudad comenzó a temblar, la puerta azul reapareció. Cruzándola, Samer regresó a la estación para encontrar a su padre a su lado. Algunas puertas no llevan a lugares nuevos, sino que devuelven lo que creíamos perdido.`
+            },
+            /* القصة 2: الإشارة */
             {
                 id: 201,
-                seriesId: 'ticket',
-                titleAr: 'الفصل الأول: القطار رقم 7 والفرصة الأخيرة',
-                titleEn: 'Chapter 1: Train No. 7 and the Last Chance',
-                descAr: 'كان آدم يقف وسط المحطة يراقب عقارب الساعة، قبل أن يكتشف اختفاء تذكرته الذهبية...',
-                descEn: 'Adam stood at the central station watching the clock, only to discover his golden ticket was missing...',
-                contentAr: `كان آدم يقف وسط زحام محطة القطارات المركزية، يراقب عقارب الساعة الضخمة وهي تتحرك ببطء قاتل. بالنسبة لآدم، لم تكن هذه مجرد رحلة عادية، بل كانت تذكرته نحو حياة جديدة. بعد سنوات من المحاولات الفاشلة والديون المتراكمة، تم قبول لوحته الفنية في أكبر معرض للفنون في العاصمة، وكان القطار رقم (7) الذي سينطلق بعد نصف ساعة هو وسيلته الوحيدة للوصول في الوقت المحدد؛ فلو غاب عن الافتتاح، ستضيع فرصة عمره وتُباع لوحاته لتسديد ديونه.
-
-أدخل آدم يده في جيب معطفه ليتفقد التذكرة الذهبية التي طبعها بصعوبة بالغة، لكن فجأة... تجمد الدم في عروقه. الجيب كان فارغاً!
-
-بدأ نبضه يتسارع بشكل جنوني، وقلب حقيبته رأساً على عقب وسط رصيف المحطة. تناثرت الأوراق والألوان، لكن لا أثر للتذكرة. تذكر أنه قبل دقائق اشترى كوباً من القهوة الدافئة وجلس على مقعد خشبي في زاوية المحطة. ركض عائداً إلى هناك، باحثاً في كل شبر، وسأل البائع العجوز الذي هز رأسه بأسف قائلاً: "يا بني، المحطة يمر بها الآلاف كل دقيقة، إن سقطت منك تذكرة، فقد تلاشت مع الريح". جلس آدم على الرصيف، ووضع رأسه بين يديه، وشعر أن أحلامه كلها تبخرت في تلك اللحظة.`,
-                contentEn: `Adam was at the train station heading to an art gallery exhibition that could save him from debt. Minutes before boarding Train No. 7, he realized his golden ticket had vanished.`
+                seriesId: 'signal',
+                titleAr: 'الفصل الأول: الإشارة',
+                titleEn: 'Chapter 1: The Signal',
+                titleEs: 'Capítulo 1: La Señal',
+                descAr: 'في عام 2147، التقطت محطة أبحاث المريخ رسالة قصيرة غامضة تتكون من أرقام...',
+                descEn: 'In 2147, a Mars research station intercepted a cryptic numerical signal...',
+                descEs: 'En 2147, una estación en Marte interceptó una misteriosa señal numérica...',
+                contentAr: `في عام 2147، التقطت محطة الأرض إشارة قادمة من المريخ تحمل أرقاماً: 17 - 04 - 29.
+وصل المهندس آدم ونور إلى المريخ ليجدا ثلاثة أعمدة معدنية في الرمال تحمل نفس الأرقام.
+اكتشفت نور أن الأرقام لم تكن مجرد رسالة، بل إحداثيات موقع سري تحت الرمال.`,
+                contentEn: `In 2147, a signal from Mars bearing numbers 17 - 04 - 29 was received. Engineer Adam and specialist Noor traveled to Mars and found three metallic pillars buried in sand marking coordinates.`,
+                contentEs: `En 2147, se recibió una señal de Marte con los números 17 - 04 - 29. El ingeniero Adam y la especialista Noor viajaron a Marte y encontraron tres pilares metálicos en la arena.`
             },
             {
                 id: 202,
-                seriesId: 'ticket',
-                titleAr: 'الفصل الثاني: عابر سبيل والوجهة الحقيقية',
-                titleEn: 'Chapter 2: A Passerby and the True Destination',
-                descAr: 'بينما كان غارقاً في يأسه، اقتربت منه طفلة ترتدي معطفاً أصفر تحمل الورقة المطوية...',
-                descEn: 'While lost in despair, a little girl in a yellow coat approached him holding the ticket...',
-                contentAr: `بينما كان آدم غارقاً في يأسه، اقتربت منه طفلة صغيرة لا تتجاوز الثامنة من عمرها، ترتدي معطفاً أصفر زاهياً. كانت تمسك بيدها ورقة مطوية بعناية. نظرت إليه بعينين واسعتين وقالت: "عمي، هل هذه اللوحة لك؟" كانت الورقة هي التذكرة المفقودة، لكن الطفلة لم تكن ترى فيها قيمتها المالية أو تذكرتها للسفر، بل كانت مبهورة بالرسمة الصغيرة المطبوعة على ظهرها والتي رسمها آدم كعلامة مائية خاصة به.
-
-شعر آدم بفرحة عارمة وكاد يقفز ليتناولها، لكنه لاحظ شيئاً أوقفه؛ الطفلة كانت تبكي بصمت، وبجانبها والدتها التي تبدو عليها علامات الإعياء الشديد، وكانتا تبحثان عن أي قطار يأخذهما إلى المستشفى الكبير في العاصمة، لكنهما لا تملكان المال لشراء التذاكر بعد أن نفدت كل مدخراتهما.
-
-نظر آدم إلى تذكرته المفقودة التي عادت إليه بأعجوبة، ثم نظر إلى ساعة المحطة: بقي خمس دقائق فقط على انطلاق القطار رقم 7، وهو يملك تذكرة واحدة فقط. في تلك اللحظة، اتخذ آدم قراراً غير متوقع؛ أخذ التذكرة من الطفلة، وابتسم لها قائلاً: "هذه التذكرة سحرية، ستأخذكما أنتِ ووالدتكِ إلى المكان الذي تحتاجان إليه". توجه معهما إلى مشرف القطار، واستخدم نفوذ بطاقته الفنية الذهبية ليقنع المشرف بنقل المقعد باسم والدة الطفلة لتلحق بوعكتها الصحية.
-
-تحرك القطار رقم 7، ووقف آدم على الرصيف يلوح للطفلة التي كانت تبتسم له من نافذة القطار. لقد ضاعت فرصة المعرض، وضاع تعب سنوات. لكن، بينما كان يجمع ألوانه ليعود أدراجه، اقتربت منه رجل أنيق كان يراقب الموقف من بعيد. أخرج الرجل بطاقته الشخصية وقدمها لآدم قائلاً: "أنا رئيس مجلس إدارة المعرض في العاصمة، كنت مسافراً في هذا القطار وتأخرت عن ركوبه بسب كثرة الحقائب. لقد رأيت ما فعلته يا بني. الفن ليس مجرد ألوان على قماش، بل هو إنسانية... ولوحاتك لن تُعرض في المعرض فقط، بل أنا سأشتريها بالكامل لحسابي الخاص". أدرك آدم حينها أن التذكرة المفقودة لم تكن لتبعده عن حلمه، بل كانت أقصر طريق ليجده حلمه الحقيقي.`,
-                contentEn: `A little girl found Adam's ticket. Seeing her sick mother needed to go to the hospital in the capital, Adam selflessly gave them his ticket. Moved by his action, the gallery owner who missed the train bought all his paintings on the spot.`
+                seriesId: 'signal',
+                titleAr: 'الفصل الثاني: تحت الرمال',
+                titleEn: 'Chapter 2: Beneath the Sands',
+                titleEs: 'Capítulo 2: Bajo la Arena',
+                descAr: 'حفر الفريق ليجد قاعة دائرية تحوي شاشات تعكس المستقبل...',
+                descEn: 'The team excavated to reveal a circular chamber with screens depicting the future...',
+                descEs: 'El equipo excavó para revelar una cámara circular con pantallas que mostraban el futuro...',
+                contentAr: `حفر الفريق ليعثروا على قاعة دائرية مليئة بالشاشات التي تعرض كوكب الأرض والتغييرات المناخية القادمة في عام 2203.
+أدركوا أن الشاشات لا تعرض الماضي بل المستقبل، ومرفقة بنص حاسم: "لدينا 56 عاماً".`,
+                contentEn: `Excavating beneath the sand revealed a subterranean hall filled with monitors displaying Earth's future in 2203, hit by solar storms with a warning: "We have 56 years."`,
+                contentEs: `Excavando bajo la arena se reveló una sala subterránea llena de monitores que mostraban el futuro de la Tierra en 2203 con una advertencia: "Tenemos 56 años."`
             },
-            /* قصة الياقوتة الزرقاء */
+            {
+                id: 203,
+                seriesId: 'signal',
+                titleAr: 'الفصل الثالث: الرسالة',
+                titleEn: 'Chapter 3: The Message',
+                titleEs: 'Capítulo 3: El Mensaje',
+                descAr: 'ظهر تسجيل لرجل من المستقبل هو نسخة أكبر من آدم نفسه...',
+                descEn: 'A hologram of a future man appeared, revealing to be an older version of Adam himself...',
+                descEs: 'Apareció un holograma de un hombre del futuro, que resultó ser una versión mayor de Adam...',
+                contentAr: `لمس آدم جهازاً فظهرت صورة نسخة أكبر منه مسجلة من عام 2203.
+أوضح التسجيل وجود مصدر طاقة في المريخ يمكنه إنقاذ كوكب الأرض من العواصف الشمسية، وتشغيله يستلزم شخصاً من عام 2147.`,
+                contentEn: `Adam touched a device releasing a recording from his older self in 2203, explaining that a Martian energy core can protect Earth from destruction if activated by someone from 2147.`,
+                contentEs: `Adam tocó un dispositivo que proyectó un mensaje de su yo mayor en 2203, explicando que un núcleo de energía en Marte puede proteger la Tierra si lo activa alguien de 2147.`
+            },
+            {
+                id: 204,
+                seriesId: 'signal',
+                titleAr: 'الفصل الرابع: العودة',
+                titleEn: 'Chapter 4: The Return',
+                titleEs: 'Capítulo 4: El Regreso',
+                descAr: 'نجحت المهمة، وفي عام 2203 استقبل الجد آدم إشارة جديدة قادمة من المستقبل...',
+                descEn: 'The mission succeeded, and in 2203 an elderly Adam received a new signal from the future...',
+                descEs: 'La misión tuvo éxito y en 2203 un anciano Adam recibió una nueva señal del futuro...',
+                contentAr: `مرت العقود وأُنقذت الأرض بفضل تقنية المريخ. وفي عام 2203، كان آدم يروي القصة لحفيدته عندما أضاءت القطعة المعدنية مجدداً بأرقام جديدة: 17 - 04 - 30.
+أدرك آدم أن هناك إشارة أخرى قادمة من المستقبل لتبدأ رحلة جديدة.`,
+                contentEn: `Decades passed and Earth was saved. In 2203, elderly Adam explained the story to his granddaughter when the artifact glowed with new numbers: 17 - 04 - 30, proving another future message awaits.`,
+                contentEs: `Pasaron décadas y la Tierra se salvó. En 2203, un anciano Adam le contó la historia a su nieta cuando el artefacto brilló con nuevos números: 17 - 04 - 30.`
+            },
+            /* القصة 3: الوعد */
             {
                 id: 301,
-                seriesId: 'blue',
-                titleAr: 'الفصل الأول: خريف أورورا والعهد المفقود',
-                titleEn: 'Chapter 1: Aurora\'s Autumn and the Lost Covenant',
-                descAr: 'تقبع الياقوتة الزرقاء المشعة في معبد الشمس بمملكة أورورا، إلى أن تسلل الساحر لوركان...',
-                descEn: 'The radiant Blue Sapphire rested in the Sun Temple of Aurora, until Lorcan stole it...',
-                contentAr: `في قلب مملكة أورورا القديمة، خلف سلاسل الجبال التي يغطيها الضباب الدائم، كانت تقبع الياقوتة الزرقاء المشعة. لم تكن مجرد حجر كريم نادٍ، بل كانت جوهرة أسطورية تنبض بضوء أزرق عميق يشبه أعماق المحيط، وتحمل في طياتها قوة سحرية تُعيد الحياة للأرض الجافة وتجلب الرخاء. كانت الجوهرة محفوظة في معبد الشمس، يحرص عليها كهنة المملكة، وكان عهد أورورا عهد سلام دائم وخير وفير بفضل بركة الياقوتة.
-
-لكن الجشع لا يموت، بل ينام في انتظار الفرصة المناسبة. في ليلة شديدة الظلمة غابت فيها النجوم، تسلل الساحر لوركان إلى المعبد. كان لوركان قد طُرِد من المملكة قبل سنوات بسبب أطماعه في السحر الأسود. باستخدام تعاويذ الظلام، تمكن من تضليل الحراس وسرقة الياقوتة الزرقاء، ليتلاشى بها في أعماق الغابة السوداء.
-
-بمجرد أن غادرت الجوهرة مكانها، حلت اللعنة على أورورا: ذبلت المحاصيل، جفت الأنهار، واختفت الشمس. شعر الملك باليأس، ولم يتقدم لمواجهة لوركان سوى شاب يدعى آرثر، مزارع بسيط يملك قلباً شجاعاً وصادقاً لا يعرف الخوف.`,
-                contentEn: `In Aurora, the magical Blue Sapphire maintained peace until the dark sorcerer Lorcan stole it. A drought fell on the kingdom, and only a brave young farmer named Arthur stepped up to retrieve it.`
+                seriesId: 'promise',
+                titleAr: 'الفصل الأول: الوعد',
+                titleEn: 'Chapter 1: The Promise',
+                titleEs: 'Capítulo 1: La Promesa',
+                descAr: 'قرر يزن صعود الجبل الشاهق بحذائه وبوصلة والده القديمة...',
+                descEn: 'Yazan decided to climb the towering mountain with his father\'s old compass...',
+                descEs: 'Yazan decidió escalar la enorme montaña con la vieja brújula de su padre...',
+                contentAr: `في قرية بين الجبال، حلم يزن بصعود الجبل الشاهق. أهداه والده بوصلة قديمة وصديقه رامي رافقه بحقيبة مليئة بالأشياء العجيبة ليبدآ المغامرة.`,
+                contentEn: `In a mountain village, Yazan dreamed of climbing the giant peak. His father gave him an old compass, and his loyal friend Rami accompanied him on the trek.`,
+                contentEs: `En un pueblo entre montañas, Yazan soñaba con escalar el gran pico. Su padre le dio una vieja brújula y su amigo Rami lo acompañó en la caminata.`
             },
             {
                 id: 302,
-                seriesId: 'blue',
-                titleAr: 'الفصل الثاني: في قلب الغابة السوداء وضياء الفجر',
-                titleEn: 'Chapter 2: In the Heart of the Black Forest',
-                descAr: 'انطلق آرثر نحو الغابة السوداء مواجهاً الأشجار والوحوش وصولاً إلى قمة برج لوركان...',
-                descEn: 'Arthur journeyed into the Black Forest, facing illusions and monsters to reach Lorcan\'s tower...',
-                contentAr: `انطلق آرثر في رحلته نحو الغابة السوداء، مسلحاً ببوصلة قديمة ورثها عن جده وعزيمة لا تلين. كانت الغابة مخيفة، مليئة بالأوهام والوحوش. واجه آرثر أشجاراً متحركة واستخدم ذكاءه لإشعال النار بالحرائق الميتة ليفسح لنفسه طريقاً.
-
-وفي عمق الغابة، واجه ذئباً ضخماً بعيون حمراء، وبدل أن يحاربه، نزع شوكة مسمومة من كفه لينقذه، فأصبح الذئب دليله المخلص حتى وصلا إلى برج لوركان الأسود.
-
-اقتحم آرثر البرج ووصل للقمة بينما يحاول لوركان امتصاص طاقة الجوهرة. زحف آرثر نحو طاولة الطقوس، ولمست يده سطح الجوهرة، فحدثت المعجزة: استجابت الياقوتة لنقاء قلب آرثر، وانفجر شعاع أزرق باهر دمر لوركان وطهر المكان، وعادت الحياة والمياه والأزهار إلى مملكة أورورا.`,
-                contentEn: `Arthur helped a wounded wolf in the dark forest who guided him to Lorcan's tower. Reaching the crystal, Arthur's pure heart unlocked the Sapphire's power, destroying Lorcan and restoring Aurora.`
+                seriesId: 'promise',
+                titleAr: 'الفصل الثاني: منتصف الطريق',
+                titleEn: 'Chapter 2: Halfway There',
+                titleEs: 'Capítulo 2: A Mitad del Camino',
+                descAr: 'وجهتهم البوصلة لكوخ فيه صورة لوالده ورسالة عن الأشخاص في الطريق...',
+                descEn: 'The compass led them to a cabin containing his father\'s photo and a message about people met along the way...',
+                descEs: 'La brújula los llevó a una cabaña que contenía una foto de su padre y un mensaje...',
+                contentAr: `وجهت البوصلة يزن ورامي لكوخ قديم، ووجدا صورة للوالد مع رسالة تسأل عن الأشخاص الذين يمرون بهم. ساعدا رجلاً مسناً مصاباً وأدرك يزن أهمية مساعدة الآخرين أثناء الرحلة.`,
+                contentEn: `The compass guided them to an old cabin containing a photo of Yazan's father and a message. After helping an injured elderly man, Yazan learned that helping people on the journey matters most.`,
+                contentEs: `La brújula los guió a una vieja cabaña con una foto del padre de Yazan y un mensaje. Tras ayudar a un anciano herido, Yazan aprendió que ayudar a las personas en el camino es lo más importante.`
+            },
+            {
+                id: 303,
+                seriesId: 'promise',
+                titleAr: 'الفصل الثالث: القمة',
+                titleEn: 'Chapter 3: The Peak',
+                titleEs: 'Capítulo 3: La Cima',
+                descAr: 'عند الوصول للقمة أشار سهم البوصلة نحو القرية ليتعلم يزن الدرس الأهم...',
+                descEn: 'Upon reaching the summit, the compass needle pointed back down to the village...',
+                descEs: 'Al llegar a la cima, la aguja de la brújula apuntó de regreso al pueblo...',
+                contentAr: `وصل الاثنان للقمة، وأشارت البوصلة للأسفل نحو القرية. فهم يزن أن القمة ليست النهاية بل معرفة قيمة البداية والناس حوله.`,
+                contentEn: `At the summit, the compass pointed back down towards the village. Yazan realized that reaching the top isn't the final goal, but appreciating where you started and who is with you.`,
+                contentEs: `En la cima, la brújula apuntó hacia el pueblo. Yazan se dio cuenta de que llegar a la cima no es el objetivo final, sino valorar de dónde vienes y con quién estás.`
+            },
+            /* القصة 4: الطرد الغريب */
+            {
+                id: 401,
+                seriesId: 'package',
+                titleAr: 'الفصل الأول: الطرد الغريب',
+                titleEn: 'Chapter 1: The Strange Parcel',
+                titleEs: 'Capítulo 1: El Paquete Extraño',
+                descAr: 'عثر مازن على صندوق يحتوي على مفتاح ذهبي ورسالة لتسليمه لبرج الساعة...',
+                descEn: 'Mazen found a box containing a golden key and instructions to deliver it to the clock tower...',
+                descEs: 'Mazen encontró una caja con una llave dorada e instrucciones para llevarla a la torre del reloj...',
+                contentAr: `وجد مازن صندوقاً أمام منزله مكتوب عليه "للشخص الأكثر ثقة". بداخله مفتاح ذهبي ورسالة تطالبه بإيصاله لبرج الساعة قبل غروب الشمس مع أخته نور.`,
+                contentEn: `Mazen discovered a box outside his door addressed to "The most trusted person." Inside was a golden key with instructions to deliver it to the city clock tower before sunset.`,
+                contentEs: `Mazen descubrió una caja afuera de su puerta dirigida a "La persona de más confianza". Dentro había una llave dorada con instrucciones de llevarla a la torre del reloj.`
+            },
+            {
+                id: 402,
+                seriesId: 'package',
+                titleAr: 'الفصل الثاني: المطاردة',
+                titleEn: 'Chapter 2: The Chase',
+                titleEs: 'Capítulo 2: La Persecución',
+                descAr: 'مطاردة طريفة ومثيرة عبر أزقة المدينة للوصول إلى البرج...',
+                descEn: 'A humorous chase through city alleys to deliver the key on time...',
+                descEs: 'Una persecución divertida por los callejones de la ciudad para entregar la llave a tiempo...',
+                contentAr: `لاحظ مازن ونور أشخاصاً يلاحقونهما، فركضا بين الأزقة واختبآ في المحلات بحماس كوميدي حتى وصلا لبرج الساعة وفتحا الباب السري.`,
+                contentEn: `Believing they were being pursued by dark agents, Mazen and Noor playfully navigated through narrow alleys to reach the base of the clock tower.`,
+                contentEs: `Creyendo que los perseguían, Mazen y Noor corrieron por estrechos callejones para llegar a la base de la torre del reloj.`
+            },
+            {
+                id: 403,
+                seriesId: 'package',
+                titleAr: 'الفصل الثالث: المفاجأة',
+                titleEn: 'Chapter 3: The Surprise',
+                titleEs: 'Capítulo 3: La Sorpresa',
+                descAr: 'اتضح أن المطاردة كانت مجرد اختبار تقليدي وسنوي لمهرجان المدينة...',
+                descEn: 'The entire chase turned out to be an annual fun city festival test...',
+                descEs: 'Resultó que toda la persecución era una divertida prueba para el festival anual de la ciudad...',
+                contentAr: `عند تشغيل الآلة بمفتاح البرج، اتضح أنها لعبة واختبار سنوي صممه صانع الساعات والرجال كانوا ممثلين. كوفئ مازن بالحلوى وأصبح يلقب بجاسوس المدينة!`,
+                contentEn: `Inserting the key activated a broadcast from the city watchmaker revealing it was a fun annual city game test! Mazen was rewarded with sweets and earned his spy nickname.`,
+                contentEs: `¡Al insertar la llave se reveló que todo era un divertido juego anual organizado por el relojero de la ciudad! Mazen fue recompensado con dulces y ganó su apodo de espía.`
+            },
+            /* القصة 5: النافذة */
+            {
+                id: 501,
+                seriesId: 'window',
+                titleAr: 'الفصل الأول: النافذة',
+                titleEn: 'Chapter 1: The Window',
+                titleEs: 'Capítulo 1: La Ventana',
+                descAr: 'منزل قديم تتغير عدد نوافذه كل يوم بشكل يتحدى العقل...',
+                descEn: 'An old house whose number of windows changes inexplicably every single day...',
+                descEs: 'Una casa antigua cuyo número de ventanas cambia inexplicablemente cada día...',
+                contentAr: `لاحظ كريم أن عدداً متغير من النوافذ يظهر في منزل مهجور كل يوم (6 ثم 7 ثم 8). اصطحب صديقته سارة ليشاهدا نافذة تظهر وتختفي خلفها شخصية غامضة.`,
+                contentEn: `Kareem noticed an abandoned home whose window count changed daily. Taking his friend Sarah, they witnessed new windows appearing out of nowhere.`,
+                contentEs: `Kareem notó una casa abandonada cuyo número de ventanas cambiaba a diario. Llevando a su amiga Sarah, presenciaron cómo aparecían ventanas de la nada.`
+            },
+            {
+                id: 502,
+                seriesId: 'window',
+                titleAr: 'الفصل الثاني: الغرفة',
+                titleEn: 'Chapter 2: The Room',
+                titleEs: 'Capítulo 2: La Habitación',
+                descAr: 'دخلا المنزل ليجدا غرفاً تعرض نوافذها أماكن وأزمنة مختلفة...',
+                descEn: 'They entered the house to find rooms with windows overlooking different places and times...',
+                descEs: 'Entraron a la casa y encontraron habitaciones cuyas ventanas daban a diferentes lugares y tiempos...',
+                contentAr: `دخلا المنزل ووجدا صوراً قديمة ورسالة تقول: "المنزل لا يغير نوافذه بل يغير ما يتذكره". وفي الأعلى وجدا غرفاً تطل نوافذها على أماكن وأزمنة مختلفة.`,
+                contentEn: `Inside, they found photos and a note: "The house doesn't change windows; it changes memories." Upstairs, windows overlooked entirely different eras and cities.`,
+                contentEs: `Dentro encontraron fotos y una nota: "La casa no cambia de ventanas; cambia de recuerdos." Arriba, las ventanas daban a diferentes épocas y ciudades.`
+            },
+            {
+                id: 503,
+                seriesId: 'window',
+                titleAr: 'الفصل الثالث: الذاكرة',
+                titleEn: 'Chapter 3: The Memory',
+                titleEs: 'Capítulo 3: El Recuerdo',
+                descAr: 'التقيا بحارس الذكريات واستعاد كريم ذكرى قديمة مع والده...',
+                descEn: 'They met the keeper of memories, and Kareem unlocked a long-lost childhood memory with his father...',
+                descEs: 'Conocieron al guardián de los recuerdos y Kareem desbloqueó un recuerdo perdido con su padre...',
+                contentAr: `التقيا برجل أوضح أن المنزل يحفظ الذكريات المنسية. استعاد كريم ذكرى طفولته هنا مع والده، لتعود النوافذ لوضعها الطبيعي مع احتفاظه بصورة تذكارية.`,
+                contentEn: `An old man explained the house preserves forgotten memories. Kareem unlocked a childhood memory of visiting with his father, settling the house back to normal.`,
+                contentEs: `Un anciano explicó que la casa conserva recuerdos olvidados. Kareem desbloqueó un recuerdo de su infancia visitando el lugar con su padre, devolviendo la casa a la normalidad.`
+            },
+            /* القصة 6: الغابة السابعة */
+            {
+                id: 601,
+                seriesId: 'forest',
+                titleAr: 'الفصل الأول: الخريطة',
+                titleEn: 'Chapter 1: The Map',
+                titleEs: 'Capítulo 1: El Mapa',
+                descAr: 'عثرت ليان على خريطة سحرية تظهر الغابة السابعة المخفية...',
+                descEn: 'Layan found a magical map revealing the hidden seventh forest...',
+                descEs: 'Layan encontró un mapa mágico que revelaba el séptimo bosque oculto...',
+                contentAr: `عثرت ليان في متجر جدها على خريطة مكتوب عليها "الغابة السابعة ليست مكاناً بل اختبار". وفي الليل أضاءت الخريطة لتظهر موقع الغابة السحرية.`,
+                contentEn: `In her grandfather's shop, Layan found a map reading: "The Seventh Forest is not a place... it is a test." At night, the map glowed, revealing the secret entrance.`,
+                contentEs: `En la tienda de su abuelo, Layan encontró un mapa que decía: "El Séptimo Bosque no es un lugar... es una prueba." Por la noche, el mapa brilló mostrando la entrada.`
+            },
+            {
+                id: 602,
+                seriesId: 'forest',
+                titleAr: 'الفصل الثاني: الغابة التي لا تنام',
+                titleEn: 'Chapter 2: The Forest That Never Sleeps',
+                titleEs: 'Capítulo 2: El Bosque Que Nunca Duerme',
+                descAr: 'انطلقت مع نديم لدخول غابة تتغير أشجارها وأنهارها باستمرار...',
+                descEn: 'She ventured with Nadeem into a realm where trees move and rivers shift on their own...',
+                descEs: 'Se aventuró con Nadeem a un reino donde los árboles se mueven y los ríos cambian solos...',
+                contentAr: `دخلت ليان ونديم الغابة السابعة حيث الأشجار تتحرك والأنهر تغير مجراها. وجدا حجراً أبيض يأمرهما بمعرفة ما تحميه الغابة.`,
+                contentEn: `Layan and Nadeem entered the forest where trees move and rivers shift direction. A glowing white stone challenged them to find what the forest truly protects.`,
+                contentEs: `Layan y Nadeem entraron al bosque donde los árboles se mueven y los ríos cambian de rumbo. Una piedra blanca los desafió a descubrir qué protege el bosque.`
+            },
+            {
+                id: 603,
+                seriesId: 'forest',
+                titleAr: 'الفصل الثالث: الحارس',
+                titleEn: 'Chapter 3: The Guardian',
+                titleEs: 'Capítulo 3: El Guardián',
+                descAr: 'اكتشفا مدينة غارقة يحميها حجر القوة الحقيقي...',
+                descEn: 'They discovered a sunken city protected by the true stone of power...',
+                descEs: 'Descubrieron una ciudad sumergida protegida por la verdadera piedra de poder...',
+                contentAr: `وصلا لبرج بوسط بحيرة تظهر تحتها مدينة غارقة. سلم الحارس ليان حجر القوة، موضحاً أن الحارس الحقيقي هو من يعرف متى لا يستخدم القوة.`,
+                contentEn: `In a lake tower, a guardian showed them a sunken ancient city. He passed the power stone to Layan, stating a true guardian knows when NOT to use power.`,
+                contentEs: `En una torre en el lago, un guardián les mostró una antigua ciudad sumergida. Le entregó la piedra a Layan diciendo que un verdadero guardián sabe cuándo NO usar el poder.`
+            },
+            {
+                id: 604,
+                seriesId: 'forest',
+                titleAr: 'الفصل الرابع: الاختيار',
+                titleEn: 'Chapter 4: The Choice',
+                titleEs: 'Capítulo 4: La Elección',
+                descAr: 'اختارت ليان حماية الجميع بحكمة لتصبح الحارسة الجديدة للغابة...',
+                descEn: 'Layan wisely chose to protect the stone without violence, becoming the new Guardian...',
+                descEs: 'Layan eligió sabiamente proteger la piedra sin violencia, convirtiéndose en la nueva Guardiana...',
+                contentAr: `عندما هاجم الغرباء المكان، لم تستخدم ليان قوة الحجر لتدميرهم بل أرجعت الحجر للبحيرة بأمان. اختفى الحارس القديم وأصبحت ليان حارسة الغابة، لتظهر غابة ثامنة جديدة على الخريطة!`,
+                contentEn: `When intruders arrived, Layan wisely returned the stone to the lake instead of using force. The guardian departed, leaving Layan as the new guardian as an eighth forest appeared on the map!`,
+                contentEs: `Cuando llegaron intrusos, Layan devolvió la piedra al lago en lugar de usar la fuerza. El guardián se fue, dejando a Layan como la nueva guardiana mientras aparecía un octavo bosque en el mapa.`
+            },
+            /* القصة 7: مدينة منتصف الليل */
+            {
+                id: 701,
+                seriesId: 'midnight',
+                titleAr: 'الفصل الأول: القطار الذي لم يكن موجودًا',
+                titleEn: 'Chapter 1: The Train That Wasn\'t There',
+                titleEs: 'Capítulo 1: El Tren Que No Existía',
+                descAr: 'صعد سليم ونور قطاراً أسود غامضاً عند الساعة 11:59 نحو مدينة مجهولة...',
+                descEn: 'Saleem and Noor boarded a mysterious dark train at 11:59 towards an unknown city...',
+                descEs: 'Saleem y Noor abordaron un misterioso tren oscuro a las 11:59 hacia una ciudad desconocida...',
+                contentAr: `في محطة قديمة عند الساعة 11:59، ظهر قطار أسود غير مسجل. صعده سليم والتقى بنور، مع تذكرة تجرهما إلى "مدينة منتصف الليل".`,
+                contentEn: `At an old station at 11:59 PM, an unlisted dark train arrived. Saleem boarded and met Noor, carrying a ticket destined for "Midnight City."`,
+                contentEs: `En una vieja estación a las 11:59 PM llegó un tren oscuro. Saleem abordó y conoció a Noor, con un boleto con destino a la "Ciudad de Medianoche".`
+            },
+            {
+                id: 702,
+                seriesId: 'midnight',
+                titleAr: 'الفصل الثاني: المدينة الصامتة',
+                titleEn: 'Chapter 2: The Silent City',
+                titleEs: 'Capítulo 2: La Ciudad Silenciosa',
+                descAr: 'وصل الاثنان إلى مدينة جميلة توقفت ساعاتها عند منتصف الليل...',
+                descEn: 'They arrived at a beautiful city where all clocks stopped right at midnight...',
+                descEs: 'Llegaron a una hermosa ciudad donde todos los relojes se detuvieron a la medianoche...',
+                contentAr: `نزلا في مدينة خالية تماماً عقارب ساعاتها متوقفة عند 12:00. وعندما تحركت الدقيقة إلى 12:01 بدأت أصوات وخيالات السكان تظهر وتختفي.`,
+                contentEn: `They stepped into a deserted city with clocks frozen at 12:00. When the clock ticked to 12:01, shadows and echoes of inhabitants began to flicker.`,
+                contentEs: `Llegaron a una ciudad desierta con relojes congelados a las 12:00. Cuando el reloj marcó las 12:01, sombras y ecos de habitantes comenzaron a parpadear.`
+            },
+            {
+                id: 703,
+                seriesId: 'midnight',
+                titleAr: 'الفصل الثالث: الرجل الذي ينتظر',
+                titleEn: 'Chapter 3: The Man Who Waits',
+                titleEs: 'Capítulo 3: El Hombre Que Espera',
+                descAr: 'التقيا برجل مسن كشف لهما سر توقف الزمن بالمدينة...',
+                descEn: 'They met an old man who revealed the secret behind the frozen time in the city...',
+                descEs: 'Conocieron a un anciano que reveló el secreto detrás del tiempo congelado...',
+                contentAr: `وجدا رجلاً مسناً أوضح أن الوقت توقف بسبب شخص يدعى يوسف أوقف الساعة عمدًا بالمفتاح لمنع الموت والزمن.`,
+                contentEn: `They met an elderly man who explained the city\'s time was frozen deliberately by a man named Youssef using a master key to stop loss.`,
+                contentEs: `Conocieron a un anciano que explicó que el tiempo de la ciudad fue congelado deliberadamente por un hombre llamado Youssef.`
+            },
+            {
+                id: 704,
+                seriesId: 'midnight',
+                titleAr: 'الفصل الرابع: آخر محطة',
+                titleEn: 'Chapter 4: The Last Station',
+                titleEs: 'Capítulo 4: La Última Estación',
+                descAr: 'وجدا يوسف واستعادا المفتاح لإعادة تشغيل الزمن وإرجاع الحقيقة...',
+                descEn: 'They found Youssef and restored the key to restart time and bring reality back...',
+                descEs: 'Encontraron a Youssef y restauraron la llave para reiniciar el tiempo y devolver la realidad...',
+                contentAr: `عثرا على يوسف في قطار قديم، وأعاد المفتاح لساعة المدينة. تحرك الزمن من جديد وعاد السكان واجتمع يوسف بأخته من جديد.`,
+                contentEn: `Finding Youssef in an abandoned carriage, they convinced him to return the key. Time restarted, reuniting Youssef with his sister.`,
+                contentEs: `Encontrando a Youssef en un vagón abandonado, lo convencieron de devolver la llave. El tiempo se reinició, reuniendo a Youssef con su hermana.`
+            },
+            {
+                id: 705,
+                seriesId: 'midnight',
+                titleAr: 'الفصل الخامس: العودة',
+                titleEn: 'Chapter 5: The Return',
+                titleEs: 'Capítulo 5: El Regreso',
+                descAr: 'عادا للواقع مع تذكرة جديدة نحو المستقبل المجهول...',
+                descEn: 'They returned to reality with a new ticket destination towards the unknown future...',
+                descEs: 'Regresaron a la realidad con un nuevo boleto hacia el futuro desconocido...',
+                contentAr: `عاد سليم للمحطة بعد 7 دقائق فقط. وبعد سنوات أصبح مهندساً للقطارات ليظهر القطار الأسود مجدداً مع تذكرة تتركه يقرر الوجهة القادمة!`,
+                contentEn: `Saleem returned to the real world only 7 minutes later. Years later as a train engineer, the black train returned, leaving him a blank ticket to choose the next destination!`,
+                contentEs: `Saleem regresó al mundo real solo 7 minutos después. ¡Años más tarde como ingeniero, el tren negro regresó dejándole un boleto en blanco para elegir el destino!`
             }
         ]
     };
 
-    let currentSeries = 'sarmad';
+    let currentSeries = 'blue_door';
     let savedFavs = JSON.parse(localStorage.getItem('user_favs')) || [];
     let readerFontSize = 1.05;
 
@@ -634,6 +892,12 @@ The signal was a pulse repeating a single word in ancient Arabic: "Sarmad" (mean
         selectSeries(currentSeries);
     }
 
+    function getLocalizedText(obj, field) {
+        if (currentLang === 'en') return obj[field + 'En'];
+        if (currentLang === 'es') return obj[field + 'Es'];
+        return obj[field + 'Ar'];
+    }
+
     function renderTabs() {
         const tabsContainer = document.getElementById('series-tabs');
         tabsContainer.innerHTML = '';
@@ -641,7 +905,7 @@ The signal was a pulse repeating a single word in ancient Arabic: "Sarmad" (mean
         data.series.forEach(s => {
             const btn = document.createElement('button');
             btn.className = `tab-btn ${s.id === currentSeries ? 'active' : ''}`;
-            btn.textContent = currentLang === 'ar' ? s.nameAr : s.nameEn;
+            btn.textContent = getLocalizedText(s, 'name');
             btn.onclick = () => selectSeries(s.id);
             tabsContainer.appendChild(btn);
         });
@@ -652,7 +916,7 @@ The signal was a pulse repeating a single word in ancient Arabic: "Sarmad" (mean
         renderTabs();
         
         const selected = data.series.find(s => s.id === seriesId);
-        document.getElementById('hero-title').textContent = currentLang === 'ar' ? selected.nameAr : selected.nameEn;
+        document.getElementById('hero-title').textContent = getLocalizedText(selected, 'name');
         document.getElementById('hero-card').style.backgroundImage = `url('${selected.image}')`;
         
         renderChapters(data.chapters.filter(c => c.seriesId === currentSeries));
@@ -663,14 +927,15 @@ The signal was a pulse repeating a single word in ancient Arabic: "Sarmad" (mean
         listContainer.innerHTML = '';
 
         if (list.length === 0) {
-            listContainer.innerHTML = `<div style="text-align:center; color: var(--text-secondary); padding: 20px;">${currentLang === 'ar' ? 'لا توجد عناصر' : 'No items found'}</div>`;
+            const noItemsText = currentLang === 'ar' ? 'لا توجد عناصر' : (currentLang === 'es' ? 'No hay elementos' : 'No items found');
+            listContainer.innerHTML = `<div style="text-align:center; color: var(--text-secondary); padding: 20px;">${noItemsText}</div>`;
             return;
         }
 
         list.forEach(ch => {
             const isFav = savedFavs.includes(ch.id);
-            const title = sanitize(currentLang === 'ar' ? ch.titleAr : ch.titleEn);
-            const desc = sanitize(currentLang === 'ar' ? ch.descAr : ch.descEn);
+            const title = sanitize(getLocalizedText(ch, 'title'));
+            const desc = sanitize(getLocalizedText(ch, 'desc'));
 
             const card = document.createElement('div');
             card.className = 'chapter-card';
@@ -718,7 +983,7 @@ The signal was a pulse repeating a single word in ancient Arabic: "Sarmad" (mean
         data.chapters.forEach(ch => {
             const item = document.createElement('div');
             item.style.cssText = 'padding: 10px; border-bottom: 1px solid var(--border-color); cursor: pointer;';
-            item.textContent = sanitize(currentLang === 'ar' ? ch.titleAr : ch.titleEn);
+            item.textContent = sanitize(getLocalizedText(ch, 'title'));
             item.onclick = () => {
                 closeModal('list-modal');
                 openChapter(ch.id);
@@ -749,7 +1014,7 @@ The signal was a pulse repeating a single word in ancient Arabic: "Sarmad" (mean
     function filterChapters() {
         const query = document.getElementById('search-input').value.toLowerCase();
         const filtered = data.chapters.filter(c => {
-            const title = (currentLang === 'ar' ? c.titleAr : c.titleEn).toLowerCase();
+            const title = getLocalizedText(c, 'title').toLowerCase();
             return title.includes(query);
         });
         renderChapters(filtered);
@@ -761,15 +1026,15 @@ The signal was a pulse repeating a single word in ancient Arabic: "Sarmad" (mean
     }
 
     function setActiveNav(navId) {
-        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
         document.getElementById(navId).classList.add('active');
     }
 
     function openChapter(chapterId) {
         const ch = data.chapters.find(c => c.id === chapterId);
         if (ch) {
-            document.getElementById('reader-chapter-title').textContent = currentLang === 'ar' ? ch.titleAr : ch.titleEn;
-            document.getElementById('reader-text-content').textContent = currentLang === 'ar' ? ch.contentAr : ch.contentEn;
+            document.getElementById('reader-chapter-title').textContent = getLocalizedText(ch, 'title');
+            document.getElementById('reader-text-content').textContent = getLocalizedText(ch, 'content');
             showPage('reader');
         }
     }
