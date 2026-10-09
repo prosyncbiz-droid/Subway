@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مُحرر وعازل الصور الذكي الآمن</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>مُحرر الصور الذكي الآمن</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
@@ -13,7 +13,7 @@
             font-family: 'Tajawal', sans-serif;
         }
         body {
-            background: #f8fafc;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: #1e293b;
             padding: 15px;
             display: flex;
@@ -24,10 +24,11 @@
         .container {
             width: 100%;
             max-width: 500px;
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 22px;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
             text-align: center;
         }
         
@@ -39,39 +40,45 @@
             margin-bottom: 12px;
         }
         h1 {
-            font-size: 1.2rem;
-            color: #0f172a;
+            font-size: 1.3rem;
+            color: #1e1b4b;
+            font-weight: 800;
         }
         .back-home-btn {
             background: #f1f5f9;
-            color: #64748b;
+            color: #e11d48;
             border: none;
             padding: 6px 12px;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 0.75rem;
             font-weight: 700;
             cursor: pointer;
             display: none;
             transition: 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
         .back-home-btn:hover {
-            background: #fee2e2;
-            color: #b91c1c;
+            background: #ffe4e6;
         }
 
         p.subtitle {
-            font-size: 0.8rem;
+            font-size: 0.82rem;
             color: #64748b;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
         }
         .upload-area {
-            border: 2px dashed #6366f1;
-            border-radius: 14px;
-            padding: 25px 20px;
-            background: #eef2ff;
+            border: 2px dashed #8b5cf6;
+            border-radius: 16px;
+            padding: 30px 20px;
+            background: linear-gradient(145deg, #f3e8ff, #ede9fe);
             cursor: pointer;
             margin-bottom: 15px;
             display: block;
+            transition: 0.3s;
+        }
+        .upload-area:hover {
+            border-color: #7c3aed;
+            transform: scale(1.01);
         }
         input[type="file"] {
             display: none;
@@ -80,7 +87,7 @@
             background: #fee2e2;
             color: #b91c1c;
             padding: 10px;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 0.85rem;
             margin-bottom: 15px;
             display: none;
@@ -90,10 +97,10 @@
             width: 100%;
             margin-bottom: 15px;
             display: none;
-            border-radius: 12px;
+            border-radius: 14px;
             overflow: hidden;
-            background: #000;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: #0f172a;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
             max-height: 350px;
             display: flex;
             justify-content: center;
@@ -115,19 +122,21 @@
         }
         .tool-btn {
             flex: 1;
-            background: #e2e8f0;
-            color: #334155;
+            background: #f1f5f9;
+            color: #475569;
             border: none;
-            padding: 10px 5px;
-            border-radius: 8px;
+            padding: 10px 4px;
+            border-radius: 10px;
             font-size: 0.75rem;
             font-weight: 700;
             cursor: pointer;
             transition: 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
         .tool-btn.active {
-            background: #6366f1;
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
             color: white;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
         }
 
         /* لوحات التحكم المتعددة */
@@ -136,9 +145,10 @@
             flex-direction: column;
             gap: 12px;
             text-align: right;
-            background: #f1f5f9;
-            padding: 15px;
-            border-radius: 12px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 16px;
+            border-radius: 14px;
             margin-bottom: 15px;
         }
         .control-group {
@@ -148,14 +158,14 @@
         }
         .control-group label {
             font-size: 0.8rem;
-            font-weight: 600;
+            font-weight: 700;
             color: #334155;
             display: flex;
             justify-content: space-between;
         }
         input[type="range"] {
             width: 100%;
-            accent-color: #6366f1;
+            accent-color: #8b5cf6;
             cursor: pointer;
         }
 
@@ -167,19 +177,20 @@
         }
         .filter-card {
             background: #fff;
-            border: 2px solid #cbd5e1;
-            padding: 8px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: bold;
+            border: 2px solid #e2e8f0;
+            padding: 9px 4px;
+            border-radius: 10px;
+            font-size: 0.78rem;
+            font-weight: 700;
             cursor: pointer;
             text-align: center;
             transition: 0.2s;
+            color: #475569;
         }
         .filter-card:hover, .filter-card.selected {
-            border-color: #6366f1;
-            background: #eef2ff;
-            color: #6366f1;
+            border-color: #8b5cf6;
+            background: #f3e8ff;
+            color: #7c3aed;
         }
 
         .crop-grid {
@@ -189,30 +200,38 @@
         }
 
         .btn {
-            background: #6366f1;
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
             color: white;
             border: none;
             padding: 12px 20px;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 0.9rem;
             width: 100%;
             cursor: pointer;
-            font-weight: bold;
-            transition: 0.2s;
+            font-weight: 700;
+            transition: 0.3s;
             text-decoration: none;
             display: inline-block;
             margin-bottom: 8px;
             text-align: center;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+        .btn:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
         }
         .btn-success {
-            background: #10b981;
+            background: linear-gradient(135deg, #10b981, #059669);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
         .btn-danger {
-            background: #ef4444;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
         }
         .btn-secondary {
             background: #e2e8f0;
             color: #334155;
+            box-shadow: none;
         }
 
         /* نافذات التحذير المنبثقة (Modals) */
@@ -222,7 +241,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
             display: none;
             justify-content: center;
             align-items: center;
@@ -230,24 +250,48 @@
         }
         .modal-box {
             background: #fff;
-            padding: 20px;
-            border-radius: 14px;
+            padding: 22px;
+            border-radius: 20px;
             width: 90%;
             max-width: 320px;
             text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
         }
         .modal-box h3 {
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: #0f172a;
+            font-weight: 800;
         }
         .modal-box p {
             font-size: 0.85rem;
             color: #64748b;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
         .modal-actions {
             display: flex;
-            gap: 8px;
+            gap: 10px;
+        }
+
+        /* تنسيق رابط إنستغرام ليظهر في صفحة التعديل فقط */
+        .instagram-footer {
+            margin-top: 15px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 12px;
+            text-align: center;
+            display: none; /* مخفي افتراضياً ولا يظهر في الصفحة الأولى */
+        }
+        .instagram-link {
+            color: #e1306c;
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+        }
+        .instagram-link:hover {
+            opacity: 0.8;
         }
     </style>
 </head>
@@ -255,18 +299,18 @@
 
     <div class="container">
         <div class="header-bar">
-            <h1>مُحرر الصور الذكي الآمن</h1>
-            <!-- زر التراجع والعودة للصفحة الرئيسية مع إنذار الحماية -->
-            <button class="back-home-btn" id="homeTriggerBtn">↩️ رجوع للصفحة الرئيسية</button>
+            <h1>✨ محرر الصور الحيوي</h1>
+            <button class="back-home-btn" id="homeTriggerBtn">↩️ رجوع للرئيسية</button>
         </div>
-        <p class="subtitle">تعديل وفلاتر متقدمة بحماية كاملة.</p>
+        <p class="subtitle">تعديل وفلاتر متقدمة بتصميم أنيق وحماية كاملة.</p>
 
         <!-- رسالة الخطأ للأمان -->
         <div class="error-msg" id="errorMsg">⚠️ تنبيه: الملف المرفوع غير مسموح به أو تالف! يرجى رفع صورة حقيقية فقط (PNG, JPG, WEBP).</div>
 
         <!-- منطقة الرفع -->
         <label class="upload-area" id="uploadLabel">
-            <p style="color: #6366f1; font-weight: 700;">📁 اضغط هنا لاختيار صورة آمنة</p>
+            <p style="color: #7c3aed; font-weight: 800; font-size: 1.05rem;">📁 اضغط هنا لاختيار صورة</p>
+            <span style="font-size: 0.75rem; color: #8b5cf6; display: block; margin-top: 5px;">يدعم PNG, JPG, WEBP بأمان تام</span>
         </label>
         <input type="file" id="imageInput" accept="image/png, image/jpeg, image/webp">
 
@@ -280,12 +324,12 @@
             <button class="tool-btn" data-target="filtersPanel">🎨 فلاتر</button>
             <button class="tool-btn" data-target="cropPanel">✂️ قص</button>
             <button class="tool-btn" data-target="adjustPanel">⚙️ الألوان</button>
-            <button class="tool-btn" id="resetTriggerBtn" style="background:#fee2e2; color:#b91c1c;">🔄 إعادة</button>
+            <button class="tool-btn" id="resetTriggerBtn" style="background:#fee2e2; color:#dc2626;">🔄 إعادة</button>
         </div>
 
         <!-- 1. لوحة الفلاتر الجاهزة -->
         <div class="panel-section" id="filtersPanel">
-            <p style="font-size: 0.8rem; font-weight: 700; color: #334155;">اختر فلتر جاهز:</p>
+            <p style="font-size: 0.8rem; font-weight: 800; color: #1e293b;">اختر فلتر جاهز:</p>
             <div class="filters-grid">
                 <div class="filter-card selected" onclick="applyPreset('normal')">طبيعي</div>
                 <div class="filter-card" onclick="applyPreset('warm')">دافئ</div>
@@ -297,7 +341,7 @@
 
         <!-- 2. لوحة قص الصورة -->
         <div class="panel-section" id="cropPanel">
-            <p style="font-size: 0.8rem; font-weight: 700; color: #334155;">اختر قياس القص:</p>
+            <p style="font-size: 0.8rem; font-weight: 800; color: #1e293b;">اختر قياس القص:</p>
             <div class="crop-grid">
                 <button class="btn btn-secondary" style="margin:0; font-size:0.8rem;" onclick="cropImage(1, 1)">مربع (1:1)</button>
                 <button class="btn btn-secondary" style="margin:0; font-size:0.8rem;" onclick="cropImage(4, 3)">أفقي (4:3)</button>
@@ -326,9 +370,15 @@
             </div>
         </div>
 
-        <!-- أزرار الإجراءات النهائية (تنزيل) -->
+        <!-- أزرار الإجراءات النهائية وتواجد رابط إنستغرام في صفحة التعديل حصراً -->
         <div id="actionButtons" style="display: none;">
             <button class="btn btn-success" id="downloadBtn">📥 حفظ وتنزيل الصورة لمعرض الهاتف</button>
+            
+            <div class="instagram-footer" id="instagramFooter" style="display: block;">
+                <a href="https://www.instagram.com/9860050jvjchccbxaz?xtok=MXhzMXh3cXVodzVtOQ==" target="_blank" class="instagram-link">
+                    📸 تابعني على إنستغرام
+                </a>
+            </div>
         </div>
     </div>
 
@@ -348,7 +398,7 @@
     <div class="modal-overlay" id="homeModal">
         <div class="modal-box">
             <h3>⚠️ تنبيه مغادرة المُحرر</h3>
-            <p>لديك تعديلات غير محفوظة، هل أنت متأكد من رغبتك في الرجوع للصفحة الرئيسية واختيار صورة جديدة؟</p>
+            <p>لديك تعديلات غير محفوظة، هل أنت متأكد من رغبتك في الرجوع واختيار صورة جديدة؟</p>
             <div class="modal-actions">
                 <button class="btn btn-danger" id="confirmHomeBtn">نعم، مغادرة</button>
                 <button class="btn btn-secondary" id="cancelHomeBtn">إلغاء</button>
@@ -379,7 +429,6 @@
         
         const downloadBtn = document.getElementById('downloadBtn');
         
-        // Modal elements
         const resetModal = document.getElementById('resetModal');
         const resetTriggerBtn = document.getElementById('resetTriggerBtn');
         const confirmResetBtn = document.getElementById('confirmResetBtn');
@@ -397,7 +446,6 @@
             imageInput.click();
         });
 
-        // نظام الحماية الشامل لرفع الملفات
         imageInput.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -410,7 +458,7 @@
             }
 
             if (file.size > 10 * 1024 * 1024) {
-                errorMsg.textContent = '⚠️️ حجم الصورة كبير جداً، يرجى اختيار صورة أقل من 10 ميجابايت.';
+                errorMsg.textContent = '⚠️ حجم الصورة كبير جداً، يرجى اختيار صورة أقل من 10 ميجابايت.';
                 errorMsg.style.display = 'block';
                 imageInput.value = '';
                 return;
@@ -433,15 +481,14 @@
                     
                     previewBox.style.display = 'flex';
                     toolbar.style.display = 'flex';
-                    actionButtons.style.display = 'block';
+                    actionButtons.style.display = 'block'; // يظهر أزرار الإجراءات ورابط إنستغرام هنا فقط
                     uploadLabel.style.display = 'none';
-                    homeTriggerBtn.style.display = 'block'; // إظهار زر العودة للأعلى
+                    homeTriggerBtn.style.display = 'block';
                 }
             }
             reader.readAsDataURL(file);
         });
 
-        // إظهار لوحات الأدوات في الشريط السفلي
         const toolButtons = document.querySelectorAll('.tool-btn[data-target]');
         const panels = document.querySelectorAll('.panel-section');
 
@@ -524,7 +571,6 @@
             range.addEventListener('input', processImageDrawing);
         });
 
-        // تحكم نافذة إعادة الضبط
         resetTriggerBtn.addEventListener('click', () => resetModal.style.display = 'flex');
         cancelResetBtn.addEventListener('click', () => resetModal.style.display = 'none');
         confirmResetBtn.addEventListener('click', () => {
@@ -538,16 +584,14 @@
             resetModal.style.display = 'none';
         });
 
-        // تحكم نافذة الرجوع للصفحة الرئيسية (تراجع عن المشروع)
         homeTriggerBtn.addEventListener('click', () => homeModal.style.display = 'flex');
         cancelHomeBtn.addEventListener('click', () => homeModal.style.display = 'none');
         confirmHomeBtn.addEventListener('click', () => {
-            // تفريغ الواجهة والعودة لصفحة الرفع الأولى
             img = new Image();
             imageInput.value = '';
             previewBox.style.display = 'none';
             toolbar.style.display = 'none';
-            actionButtons.style.display = 'none';
+            actionButtons.style.display = 'none'; // إخفاء أزرار الإجراءات ورابط إنستغرام عند العودة للرئيسية
             homeTriggerBtn.style.display = 'none';
             panels.forEach(p => p.style.display = 'none');
             toolButtons.forEach(b => b.classList.remove('active'));
@@ -562,7 +606,6 @@
             hueRange.value = 0;
         }
 
-        // زر التنزيل الآمن
         downloadBtn.addEventListener('click', function() {
             canvas.toBlob(function(blob) {
                 const url = URL.createObjectURL(blob);
