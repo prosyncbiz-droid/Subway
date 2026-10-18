@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مُحرر الصور الذكي الآمن</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <title>استوديو الفن البصري - محرر وضغاط الصور الشامل والآمن</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: 'Tajawal', sans-serif;
+            user-select: none;
         }
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #1e293b;
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
+            color: #f8fafc;
             padding: 15px;
             display: flex;
             flex-direction: column;
@@ -23,16 +24,16 @@
         }
         .container {
             width: 100%;
-            max-width: 500px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            max-width: 520px;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
             padding: 22px;
             border-radius: 24px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            color: #1e293b;
             text-align: center;
         }
         
-        /* رأس الصفحة وزر الرجوع */
         .header-bar {
             display: flex;
             justify-content: space-between;
@@ -45,7 +46,7 @@
             font-weight: 800;
         }
         .back-home-btn {
-            background: #f1f5f9;
+            background: #ffe4e6;
             color: #e11d48;
             border: none;
             padding: 6px 12px;
@@ -58,18 +59,19 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
         .back-home-btn:hover {
-            background: #ffe4e6;
+            background: #fecdd3;
         }
 
         p.subtitle {
-            font-size: 0.82rem;
+            font-size: 0.85rem;
             color: #64748b;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
+            font-weight: 600;
         }
         .upload-area {
             border: 2px dashed #8b5cf6;
-            border-radius: 16px;
-            padding: 30px 20px;
+            border-radius: 18px;
+            padding: 35px 20px;
             background: linear-gradient(145deg, #f3e8ff, #ede9fe);
             cursor: pointer;
             margin-bottom: 15px;
@@ -83,55 +85,54 @@
         input[type="file"] {
             display: none;
         }
-        .error-msg {
-            background: #fee2e2;
-            color: #b91c1c;
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            margin-bottom: 15px;
-            display: none;
-            font-weight: 500;
-        }
+
         .preview-box {
             width: 100%;
             margin-bottom: 15px;
             display: none;
-            border-radius: 14px;
+            border-radius: 16px;
             overflow: hidden;
             background: #0f172a;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
             max-height: 350px;
-            display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
+            touch-action: none;
         }
         .preview-box canvas {
             max-width: 100%;
             max-height: 350px;
             object-fit: contain;
             display: block;
+            cursor: grab;
+        }
+        .preview-box canvas:active {
+            cursor: grabbing;
         }
         
-        /* الشريط السفلي للأدوات */
         .toolbar {
             display: none;
-            gap: 6px;
+            gap: 4px;
             margin-bottom: 15px;
             justify-content: space-between;
+            overflow-x: auto;
+            padding-bottom: 4px;
         }
         .tool-btn {
             flex: 1;
+            min-width: 58px;
             background: #f1f5f9;
             color: #475569;
             border: none;
-            padding: 10px 4px;
+            padding: 9px 3px;
             border-radius: 10px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 700;
             cursor: pointer;
             transition: 0.2s;
             box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            white-space: nowrap;
         }
         .tool-btn.active {
             background: linear-gradient(135deg, #8b5cf6, #6d28d9);
@@ -139,7 +140,6 @@
             box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
         }
 
-        /* لوحات التحكم المتعددة */
         .panel-section {
             display: none;
             flex-direction: column;
@@ -168,14 +168,73 @@
             accent-color: #8b5cf6;
             cursor: pointer;
         }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            font-weight: bold;
+            color: #334155;
+            outline: none;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            font-weight: bold;
+            color: #334155;
+            outline: none;
+        }
 
-        /* أزرار الفلاتر والقص */
-        .filters-grid {
+        .color-picker-grid {
+            display: flex;
+            gap: 8px;
+            justify-content: space-between;
+            margin-top: 5px;
+        }
+        .color-dot {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid #e2e8f0;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .color-dot.selected {
+            transform: scale(1.15);
+            border-color: #8b5cf6;
+            box-shadow: 0 0 8px rgba(139, 92, 246, 0.5);
+        }
+
+        .stats-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 5px;
+            font-size: 0.78rem;
+            font-weight: bold;
+            text-align: center;
+        }
+        .stat-item {
+            background: #ffffff;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+        }
+        .stat-item span {
+            color: #8b5cf6;
+        }
+
+        .filters-grid, .frames-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 8px;
         }
-        .filter-card {
+        .filter-card, .frame-card {
             background: #fff;
             border: 2px solid #e2e8f0;
             padding: 9px 4px;
@@ -187,7 +246,8 @@
             transition: 0.2s;
             color: #475569;
         }
-        .filter-card:hover, .filter-card.selected {
+        .filter-card:hover, .filter-card.selected,
+        .frame-card:hover, .frame-card.selected {
             border-color: #8b5cf6;
             background: #f3e8ff;
             color: #7c3aed;
@@ -234,15 +294,14 @@
             box-shadow: none;
         }
 
-        /* نافذات التحذير المنبثقة (Modals) */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(4px);
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(5px);
             display: none;
             justify-content: center;
             align-items: center;
@@ -252,10 +311,12 @@
             background: #fff;
             padding: 22px;
             border-radius: 20px;
-            width: 90%;
-            max-width: 320px;
+            width: 92%;
+            max-width: 420px;
             text-align: center;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            max-height: 90vh;
+            overflow-y: auto;
         }
         .modal-box h3 {
             margin-bottom: 8px;
@@ -265,20 +326,45 @@
         .modal-box p {
             font-size: 0.85rem;
             color: #64748b;
-            margin-bottom: 18px;
+            margin-bottom: 15px;
         }
         .modal-actions {
             display: flex;
             gap: 10px;
         }
 
-        /* تنسيق رابط إنستغرام ليظهر في صفحة التعديل فقط */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .comparison-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .comparison-item span {
+            font-size: 0.75rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+            color: #475569;
+        }
+        .comparison-item img {
+            width: 100%;
+            height: 140px;
+            object-fit: contain;
+            border-radius: 10px;
+            background: #0f172a;
+            border: 1px solid #e2e8f0;
+        }
+
         .instagram-footer {
             margin-top: 15px;
             border-top: 1px solid #e2e8f0;
             padding-top: 12px;
             text-align: center;
-            display: none; /* مخفي افتراضياً ولا يظهر في الصفحة الأولى */
+            display: none;
         }
         .instagram-link {
             color: #e1306c;
@@ -299,36 +385,34 @@
 
     <div class="container">
         <div class="header-bar">
-            <h1>✨ محرر الصور الحيوي</h1>
+            <h1>✨ استوديو تحرير وضغط الصور</h1>
             <button class="back-home-btn" id="homeTriggerBtn">↩️ رجوع للرئيسية</button>
         </div>
-        <p class="subtitle">تعديل وفلاتر متقدمة بتصميم أنيق وحماية كاملة.</p>
+        <p class="subtitle" id="subtitleText">عدل واضغط صورك بأمان تام ✨</p>
 
-        <!-- رسالة الخطأ للأمان -->
-        <div class="error-msg" id="errorMsg">⚠️ تنبيه: الملف المرفوع غير مسموح به أو تالف! يرجى رفع صورة حقيقية فقط (PNG, JPG, WEBP).</div>
-
-        <!-- منطقة الرفع -->
         <label class="upload-area" id="uploadLabel">
-            <p style="color: #7c3aed; font-weight: 800; font-size: 1.05rem;">📁 اضغط هنا لاختيار صورة</p>
-            <span style="font-size: 0.75rem; color: #8b5cf6; display: block; margin-top: 5px;">يدعم PNG, JPG, WEBP بأمان تام</span>
+            <p style="color: #7c3aed; font-weight: 800; font-size: 1.05rem;">📁 اضغط هنا لاختيار صورة آمنة</p>
+            <span style="font-size: 0.75rem; color: #8b5cf6; display: block; margin-top: 5px;">يدعم PNG, JPG, WEBP, GIF, BMP</span>
         </label>
-        <input type="file" id="imageInput" accept="image/png, image/jpeg, image/webp">
+        <input type="file" id="imageInput" accept="image/jpeg, image/png, image/webp, image/gif, image/bmp">
 
-        <!-- مكان المعاينة -->
-        <div class="preview-box" id="previewBox" style="display: none;">
+        <div class="preview-box" id="previewBox">
             <canvas id="imageCanvas"></canvas>
         </div>
 
-        <!-- الشريط السفلي للأدوات -->
         <div class="toolbar" id="toolbar">
-            <button class="tool-btn" data-target="filtersPanel">🎨 فلاتر</button>
+            <button class="tool-btn active" data-target="filtersPanel">🎨 فلاتر</button>
             <button class="tool-btn" data-target="cropPanel">✂️ قص</button>
-            <button class="tool-btn" data-target="adjustPanel">⚙️ الألوان</button>
+            <button class="tool-btn" data-target="rotatePanel">🔄 تدوير</button>
+            <button class="tool-btn" data-target="textPanel">✍️ كتابة</button>
+            <button class="tool-btn" data-target="framePanel">🖼️ إطارات</button>
+            <button class="tool-btn" data-target="adjustPanel">⚙️ ألوان</button>
+            <button class="tool-btn" data-target="compressPanel">🗜️ ضغط</button>
             <button class="tool-btn" id="resetTriggerBtn" style="background:#fee2e2; color:#dc2626;">🔄 إعادة</button>
         </div>
 
-        <!-- 1. لوحة الفلاتر الجاهزة -->
-        <div class="panel-section" id="filtersPanel">
+        <!-- 1. لوحة الفلاتر -->
+        <div class="panel-section" id="filtersPanel" style="display: flex;">
             <p style="font-size: 0.8rem; font-weight: 800; color: #1e293b;">اختر فلتر جاهز:</p>
             <div class="filters-grid">
                 <div class="filter-card selected" onclick="applyPreset('normal')">طبيعي</div>
@@ -339,7 +423,7 @@
             </div>
         </div>
 
-        <!-- 2. لوحة قص الصورة -->
+        <!-- 2. لوحة القص -->
         <div class="panel-section" id="cropPanel">
             <p style="font-size: 0.8rem; font-weight: 800; color: #1e293b;">اختر قياس القص:</p>
             <div class="crop-grid">
@@ -350,7 +434,56 @@
             </div>
         </div>
 
-        <!-- 3. لوحة الألوان والسطوع المتقدمة -->
+        <!-- 3. لوحة التدوير 🔄 -->
+        <div class="panel-section" id="rotatePanel">
+            <p style="font-size: 0.8rem; font-weight: 800; color: #1e293b;">تدوير الصورة:</p>
+            <button class="btn btn-secondary" style="margin:0;" onclick="rotateImage()">🔄 تدوير 90 درجة يميناً</button>
+        </div>
+
+        <!-- 4. لوحة الكتابة والسحب اليدوي ✍️ -->
+        <div class="panel-section" id="textPanel">
+            <div class="control-group">
+                <label>النص المراد كتابته:</label>
+                <input type="text" id="textInput" placeholder="اكتب اسمك أو حقوقك هنا...">
+            </div>
+            <p style="font-size: 0.75rem; color: #7c3aed; font-weight: 700;">💡 ملاحظة: اسحب النص بإصبعك فوق الصورة لتحريكه بحرية تامة!</p>
+            <div class="control-group">
+                <label>اختر لون الخط:</label>
+                <div class="color-picker-grid">
+                    <div class="color-dot selected" style="background: #ffffff;" onclick="setTextColor('#ffffff')"></div>
+                    <div class="color-dot" style="background: #000000;" onclick="setTextColor('#000000')"></div>
+                    <div class="color-dot" style="background: #ef4444;" onclick="setTextColor('#ef4444')"></div>
+                    <div class="color-dot" style="background: #f59e0b;" onclick="setTextColor('#f59e0b')"></div>
+                    <div class="color-dot" style="background: #10b981;" onclick="setTextColor('#10b981')"></div>
+                    <div class="color-dot" style="background: #8b5cf6;" onclick="setTextColor('#8b5cf6')"></div>
+                </div>
+            </div>
+            <div class="control-group">
+                <label>الشفافية والغمق: <span id="textOpacityVal">100</span>%</label>
+                <input type="range" id="textOpacityRange" min="10" max="100" value="100">
+            </div>
+            <div class="control-group">
+                <label>حجم الخط: <span id="textSizeVal">30</span>px</label>
+                <input type="range" id="textSizeRange" min="12" max="100" value="30">
+            </div>
+        </div>
+
+        <!-- 5. لوحة الإطارات 🖼️ -->
+        <div class="panel-section" id="framePanel">
+            <p style="font-size: 0.8rem; font-weight: 800; color: #1e293b;">اختر الإطار المناسب:</p>
+            <div class="frames-grid">
+                <div class="frame-card selected" onclick="setFrameStyle('none')">بدون إطار</div>
+                <div class="frame-card" onclick="setFrameStyle('white')">أبيض ناصع</div>
+                <div class="frame-card" onclick="setFrameStyle('black')">أسود فاخر</div>
+                <div class="frame-card" onclick="setFrameStyle('gold')">ذهبي ملكي</div>
+            </div>
+            <div class="control-group" style="margin-top: 10px;">
+                <label>سمك الإطار: <span id="frameWidthVal">0</span>px</label>
+                <input type="range" id="frameWidthRange" min="0" max="50" value="0">
+            </div>
+        </div>
+
+        <!-- 6. لوحة ضبط الألوان -->
         <div class="panel-section" id="adjustPanel">
             <div class="control-group">
                 <label>السطوع: <span id="brightnessVal">100</span>%</label>
@@ -370,9 +503,28 @@
             </div>
         </div>
 
-        <!-- أزرار الإجراءات النهائية وتواجد رابط إنستغرام في صفحة التعديل حصراً -->
+        <!-- 7. لوحة الضغط والصيغة -->
+        <div class="panel-section" id="compressPanel">
+            <div class="control-group">
+                <label>الصيغة المستهدفة:</label>
+                <select id="outputFormat">
+                    <option value="image/webp">WEBP (ضغط مميز وحجم صغير)</option>
+                    <option value="image/jpeg">JPG (الصيغة القياسية)</option>
+                    <option value="image/png">PNG (دقة عالية وشفافية)</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label>جودة الصورة والضغط: <span id="qualityVal">80</span>%</label>
+                <input type="range" id="qualityRange" min="0.1" max="1.0" step="0.05" value="0.8">
+            </div>
+            <div class="stats-box">
+                <div class="stat-item">الحجم الأصلي: <br><span id="originalSize">0 KB</span></div>
+                <div class="stat-item">الحجم المتوقع: <br><span id="newSize">0 KB</span></div>
+            </div>
+        </div>
+
         <div id="actionButtons" style="display: none;">
-            <button class="btn btn-success" id="downloadBtn">📥 حفظ وتنزيل الصورة لمعرض الهاتف</button>
+            <button class="btn btn-success" id="downloadBtn">📥 معاينة وحفظ الصورة للمعرض</button>
             
             <div class="instagram-footer" id="instagramFooter" style="display: block;">
                 <a href="https://www.instagram.com/9860050jvjchccbxaz?xtok=MXhzMXh3cXVodzVtOQ==" target="_blank" class="instagram-link">
@@ -382,26 +534,37 @@
         </div>
     </div>
 
-    <!-- نافذة تنبيه إعادة ضبط التعديلات -->
-    <div class="modal-overlay" id="resetModal">
+    <!-- نافذة منبثقة عامة -->
+    <div class="modal-overlay" id="customModal">
         <div class="modal-box">
-            <h3>⚠️ تنبيه إعادة الضبط</h3>
-            <p>هل أنت متأكد من رغبتك في إلغاء كافة التعديلات والعودة للإعدادات الافتراضية؟</p>
-            <div class="modal-actions">
-                <button class="btn btn-danger" id="confirmResetBtn">نعم، إعادة ضبط</button>
-                <button class="btn btn-secondary" id="cancelResetBtn">إلغاء</button>
+            <h3 id="modalTitle">تنبيه</h3>
+            <p id="modalMessage">رسالة التنبيه</p>
+            <div class="modal-actions" id="modalActions">
+                <button class="btn" onclick="closeModal()">حسناً</button>
             </div>
         </div>
     </div>
 
-    <!-- نافذة تنبيه الرجوع للصفحة الرئيسية -->
-    <div class="modal-overlay" id="homeModal">
+    <!-- نافذة المقارنة السحرية "قبل وبعد" ✨ -->
+    <div class="modal-overlay" id="compareModal">
         <div class="modal-box">
-            <h3>⚠️ تنبيه مغادرة المُحرر</h3>
-            <p>لديك تعديلات غير محفوظة، هل أنت متأكد من رغبتك في الرجوع واختيار صورة جديدة؟</p>
+            <h3>✨ قارن لمستك الفنية!</h3>
+            <p>شاهد الفارق المذهل بين الصورة الأصلية والتعديل الجديد قبل الحفظ:</p>
+            
+                    <div class="comparison-grid">
+                <div class="comparison-item">
+                    <span>الصورة الأصلية 📷</span>
+                    <img id="beforeImg" src="" alt="قبل">
+                </div>
+                <div class="comparison-item">
+                    <span>بعد التعديل 🎨</span>
+                    <img id="afterImg" src="" alt="بعد">
+                </div>
+            </div>
+
             <div class="modal-actions">
-                <button class="btn btn-danger" id="confirmHomeBtn">نعم، مغادرة</button>
-                <button class="btn btn-secondary" id="cancelHomeBtn">إلغاء</button>
+                <button class="btn btn-success" id="confirmDownloadBtn">📥 حفظ الآن لمعرض الهاتف</button>
+                <button class="btn btn-secondary" onclick="closeCompareModal()">تعديل إضافي</button>
             </div>
         </div>
     </div>
@@ -412,80 +575,132 @@
         const previewBox = document.getElementById('previewBox');
         const canvas = document.getElementById('imageCanvas');
         const ctx = canvas.getContext('2d');
-        const errorMsg = document.getElementById('errorMsg');
         const toolbar = document.getElementById('toolbar');
         const actionButtons = document.getElementById('actionButtons');
         const homeTriggerBtn = document.getElementById('homeTriggerBtn');
+        const subtitleText = document.getElementById('subtitleText');
 
         const brightnessRange = document.getElementById('brightnessRange');
         const contrastRange = document.getElementById('contrastRange');
         const saturateRange = document.getElementById('saturateRange');
         const hueRange = document.getElementById('hueRange');
 
-        const brightnessVal = document.getElementById('brightnessVal');
-        const contrastVal = document.getElementById('contrastVal');
-        const saturateVal = document.getElementById('saturateVal');
-        const hueVal = document.getElementById('hueVal');
+        const frameWidthRange = document.getElementById('frameWidthRange');
+        const frameWidthVal = document.getElementById('frameWidthVal');
+
+        const textInput = document.getElementById('textInput');
+        const textOpacityRange = document.getElementById('textOpacityRange');
+        const textOpacityVal = document.getElementById('textOpacityVal');
+        const textSizeRange = document.getElementById('textSizeRange');
+        const textSizeVal = document.getElementById('textSizeVal');
+
+        const outputFormat = document.getElementById('outputFormat');
+        const qualityRange = document.getElementById('qualityRange');
+        const qualityVal = document.getElementById('qualityVal');
+        const originalSizeSpan = document.getElementById('originalSize');
+        const newSizeSpan = document.getElementById('newSize');
         
         const downloadBtn = document.getElementById('downloadBtn');
-        
-        const resetModal = document.getElementById('resetModal');
+        const confirmDownloadBtn = document.getElementById('confirmDownloadBtn');
         const resetTriggerBtn = document.getElementById('resetTriggerBtn');
-        const confirmResetBtn = document.getElementById('confirmResetBtn');
-        const cancelResetBtn = document.getElementById('cancelResetBtn');
-
-        const homeModal = document.getElementById('homeModal');
-        const confirmHomeBtn = document.getElementById('confirmHomeBtn');
-        const cancelHomeBtn = document.getElementById('cancelHomeBtn');
 
         let img = new Image();
+        let originalFile = null;
         let currentCropAspect = 0;
+        let currentFrameColor = 'none';
+        let currentTextColor = '#ffffff';
+        let rotationAngle = 0;
 
-        uploadLabel.addEventListener('click', () => {
-            errorMsg.style.display = 'none';
-            imageInput.click();
-        });
+        // إحداثيات سحب النص يدوياً
+        let textX = 0;
+        let textY = 0;
+        let isDraggingText = false;
+        let isTextInitialized = false;
 
+        function showAlert(title, message, isConfirm = false, onConfirm = null) {
+            const modal = document.getElementById('customModal');
+            const titleEl = document.getElementById('modalTitle');
+            const msgEl = document.getElementById('modalMessage');
+            const actionsEl = document.getElementById('modalActions');
+
+            titleEl.textContent = title;
+            msgEl.textContent = message;
+
+            if (isConfirm) {
+                actionsEl.innerHTML = `
+                    <button class="btn btn-danger" id="modalConfirmBtn">نعم</button>
+                    <button class="btn btn-secondary" onclick="closeModal()">إلغاء</button>
+                `;
+                document.getElementById('modalConfirmBtn').onclick = () => {
+                    closeModal();
+                    if (onConfirm) onConfirm();
+                };
+            } else {
+                actionsEl.innerHTML = `<button class="btn" onclick="closeModal()">حسناً</button>`;
+            }
+
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('customModal').style.display = 'none';
+        }
+
+        function closeCompareModal() {
+            document.getElementById('compareModal').style.display = 'none';
+        }
+
+        uploadLabel.addEventListener('click', () => imageInput.click());
+
+        // حماية صارمة لرفع الصور والتأكد من MIME-Type والأبعاد
         imageInput.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (!file) return;
 
-            const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/bmp'];
             if (!allowedTypes.includes(file.type)) {
-                errorMsg.style.display = 'block';
-                imageInput.value = ''; 
-                return;
-            }
-
-            if (file.size > 10 * 1024 * 1024) {
-                errorMsg.textContent = '⚠️ حجم الصورة كبير جداً، يرجى اختيار صورة أقل من 10 ميجابايت.';
-                errorMsg.style.display = 'block';
+                showAlert("حظر أمني 🛡️", "عذراً، هذا الملف غير مسموح به! الموقع مخصص للصور الآمنة فقط.");
                 imageInput.value = '';
                 return;
             }
 
-            errorMsg.style.display = 'none';
+            if (file.size > 15 * 1024 * 1024) {
+                showAlert("حجم كبير ⚠️", "يرجى اختيار صورة أقل من 15 ميجابايت.");
+                imageInput.value = '';
+                return;
+            }
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                img.src = e.target.result;
+                img = new Image();
                 img.onload = function() {
                     if (img.width === 0 || img.height === 0) {
-                        errorMsg.textContent = '⚠️ الملف تالف أو ليس صورة سليمة.';
-                        errorMsg.style.display = 'block';
+                        showAlert("ملف غير صالح ⚠️", "الملف المرفوع تالف أو محاولة حقن غير مدعومة.");
+                        imageInput.value = '';
                         return;
                     }
 
+                    originalFile = file;
+                    originalSizeSpan.textContent = (file.size / 1024).toFixed(1) + ' KB';
+
                     resetValuesToDefault();
+                    rotationAngle = 0;
+                    isTextInitialized = false;
                     processImageDrawing();
                     
                     previewBox.style.display = 'flex';
                     toolbar.style.display = 'flex';
-                    actionButtons.style.display = 'block'; // يظهر أزرار الإجراءات ورابط إنستغرام هنا فقط
+                    actionButtons.style.display = 'block';
                     uploadLabel.style.display = 'none';
                     homeTriggerBtn.style.display = 'block';
-                }
-            }
+                    subtitleText.style.display = 'none'; // إخفاء النص الرئيسي تماماً في صفحة التعديل
+                };
+                img.onerror = function() {
+                    showAlert("ملف تالف 🛡️", "عذراً، تعذر قراءة الملف المرفوع. تم رفضه لأسباب أمنية.");
+                    imageInput.value = '';
+                };
+                img.src = e.target.result;
+            };
             reader.readAsDataURL(file);
         });
 
@@ -495,12 +710,15 @@
         toolButtons.forEach(btn => {
             btn.addEventListener('click', () => {
                 const targetId = btn.getAttribute('data-target');
-                
                 toolButtons.forEach(b => b.classList.remove('active'));
                 panels.forEach(p => p.style.display = 'none');
 
                 btn.classList.add('active');
                 document.getElementById(targetId).style.display = 'flex';
+
+                if (targetId === 'compressPanel') {
+                    updateEstimatedSize();
+                }
             });
         });
 
@@ -527,6 +745,28 @@
             processImageDrawing();
         }
 
+        function rotateImage() {
+            rotationAngle = (rotationAngle + 90) % 360;
+            processImageDrawing();
+        }
+
+        function setFrameStyle(color) {
+            currentFrameColor = color;
+            document.querySelectorAll('.frame-card').forEach(c => c.classList.remove('selected'));
+            event.target.classList.add('selected');
+            if (color !== 'none' && parseInt(frameWidthRange.value) === 0) {
+                frameWidthRange.value = 15;
+            }
+            processImageDrawing();
+        }
+
+        function setTextColor(color) {
+            currentTextColor = color;
+            document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('selected'));
+            event.target.classList.add('selected');
+            processImageDrawing();
+        }
+
         function processImageDrawing() {
             if (!img.src) return;
 
@@ -549,54 +789,163 @@
                 }
             }
 
-            canvas.width = sWidth;
-            canvas.height = sHeight;
+            const frameWidth = parseInt(frameWidthRange.value);
+            frameWidthVal.textContent = frameWidth;
+
+            // ضبط أبعاد الـ Canvas حسب التدوير
+            if (rotationAngle === 90 || rotationAngle === 270) {
+                canvas.width = sHeight + (currentFrameColor !== 'none' ? frameWidth * 2 : 0);
+                canvas.height = sWidth + (currentFrameColor !== 'none' ? frameWidth * 2 : 0);
+            } else {
+                canvas.width = sWidth + (currentFrameColor !== 'none' ? frameWidth * 2 : 0);
+                canvas.height = sHeight + (currentFrameColor !== 'none' ? frameWidth * 2 : 0);
+            }
 
             const b = brightnessRange.value;
             const c = contrastRange.value;
             const s = saturateRange.value;
             const h = hueRange.value;
 
-            brightnessVal.textContent = b;
-            contrastVal.textContent = c;
-            saturateVal.textContent = s;
-            hueVal.textContent = h;
-
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (currentFrameColor !== 'none' && frameWidth > 0) {
+                if (currentFrameColor === 'white') ctx.fillStyle = '#ffffff';
+                else if (currentFrameColor === 'black') ctx.fillStyle = '#0f172a';
+                else if (currentFrameColor === 'gold') ctx.fillStyle = '#d97706';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+
+            ctx.save();
+            const drawX = currentFrameColor !== 'none' ? frameWidth : 0;
+            const drawY = currentFrameColor !== 'none' ? frameWidth : 0;
+
+            if (rotationAngle > 0) {
+                ctx.translate(canvas.width / 2, canvas.height / 2);
+                ctx.rotate((rotationAngle * Math.PI) / 180);
+                ctx.translate(-sWidth / 2, -sHeight / 2);
+            } else {
+                ctx.translate(drawX, drawY);
+            }
+
             ctx.filter = `brightness(${b}%) contrast(${c}%) saturate(${s}%) hue-rotate(${h}deg)`;
             ctx.drawImage(img, sX, sY, sWidth, sHeight, 0, 0, sWidth, sHeight);
+            ctx.restore();
+
+            // ضبط إحداثيات النص الافتراضية لأول مرة
+            if (!isTextInitialized) {
+                textX = canvas.width / 2;
+                textY = canvas.height - 40;
+                isTextInitialized = true;
+            }
+
+            // رسم النص السحب اليدوي
+            const text = textInput.value.trim();
+            if (text) {
+                const textSize = parseInt(textSizeRange.value);
+                const textOpacity = parseFloat(textOpacityRange.value) / 100;
+
+                textSizeVal.textContent = textSize;
+                textOpacityVal.textContent = Math.round(textOpacity * 100);
+
+                ctx.save();
+                ctx.globalAlpha = textOpacity;
+                ctx.font = `bold ${textSize}px Tajawal, sans-serif`;
+                ctx.fillStyle = currentTextColor;
+                ctx.textAlign = 'center';
+                ctx.shadowColor = 'rgba(0,0,0,0.7)';
+                ctx.shadowBlur = 8;
+                ctx.fillText(text, textX, textY);
+                ctx.restore();
+            }
         }
 
-        [brightnessRange, contrastRange, saturateRange, hueRange].forEach(range => {
-            range.addEventListener('input', processImageDrawing);
-        });
+        // نظام سحب النص باللمس أو الماوس مباشرة على الـ Canvas
+        function getCanvasCoordinates(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return {
+                x: (clientX - rect.left) * scaleX,
+                y: (clientY - rect.top) * scaleY
+            };
+        }
 
-        resetTriggerBtn.addEventListener('click', () => resetModal.style.display = 'flex');
-        cancelResetBtn.addEventListener('click', () => resetModal.style.display = 'none');
-        confirmResetBtn.addEventListener('click', () => {
-            resetValuesToDefault();
-            currentCropAspect = 0;
-            document.querySelectorAll('.filter-card').forEach((c, idx) => {
-                if(idx === 0) c.classList.add('selected');
-                else c.classList.remove('selected');
-            });
+        canvas.addEventListener('mousedown', (e) => { isDraggingText = true; updateTextPosition(e); });
+        canvas.addEventListener('mousemove', (e) => { if (isDraggingText) updateTextPosition(e); });
+        window.addEventListener('mouseup', () => { isDraggingText = false; });
+
+        canvas.addEventListener('touchstart', (e) => { isDraggingText = true; updateTextPosition(e); });
+        canvas.addEventListener('touchmove', (e) => { if (isDraggingText) updateTextPosition(e); });
+        window.addEventListener('touchend', () => { isDraggingText = false; });
+
+        function updateTextPosition(e) {
+            const pos = getCanvasCoordinates(e);
+            textX = pos.x;
+            textY = pos.y;
             processImageDrawing();
-            resetModal.style.display = 'none';
+        }
+
+        function updateEstimatedSize() {
+            const format = outputFormat.value;
+            const quality = parseFloat(qualityRange.value);
+            qualityVal.textContent = Math.round(quality * 100);
+
+            const dataUrl = canvas.toDataURL(format, quality);
+            const base64Length = dataUrl.length - (dataUrl.indexOf(',') + 1);
+            const blobSize = (base64Length * 3) / 4;
+            newSizeSpan.textContent = (blobSize / 1024).toFixed(1) + ' KB';
+        }
+
+        [brightnessRange, contrastRange, saturateRange, hueRange, frameWidthRange, textSizeRange, textOpacityRange].forEach(element => {
+            element.addEventListener('input', processImageDrawing);
         });
 
-        homeTriggerBtn.addEventListener('click', () => homeModal.style.display = 'flex');
-        cancelHomeBtn.addEventListener('click', () => homeModal.style.display = 'none');
-        confirmHomeBtn.addEventListener('click', () => {
-            img = new Image();
-            imageInput.value = '';
-            previewBox.style.display = 'none';
-            toolbar.style.display = 'none';
-            actionButtons.style.display = 'none'; // إخفاء أزرار الإجراءات ورابط إنستغرام عند العودة للرئيسية
-            homeTriggerBtn.style.display = 'none';
-            panels.forEach(p => p.style.display = 'none');
-            toolButtons.forEach(b => b.classList.remove('active'));
-            uploadLabel.style.display = 'block';
-            homeModal.style.display = 'none';
+        textInput.addEventListener('input', processImageDrawing);
+
+        [qualityRange, outputFormat].forEach(element => {
+            element.addEventListener('change', updateEstimatedSize);
+            element.addEventListener('input', () => {
+                qualityVal.textContent = Math.round(parseFloat(qualityRange.value) * 100);
+            });
+        });
+
+        // زر إعادة الضبط الشامل
+        resetTriggerBtn.addEventListener('click', () => {
+            showAlert("تنبيه إعادة الضبط ⚠️", "هل أنت متأكد من إلغاء التعديلات والعودة للإعدادات الأصلية؟", true, () => {
+                resetValuesToDefault();
+                currentCropAspect = 0;
+                currentFrameColor = 'none';
+                currentTextColor = '#ffffff';
+                rotationAngle = 0;
+                textInput.value = '';
+                isTextInitialized = false;
+                document.querySelectorAll('.filter-card, .frame-card, .color-dot').forEach((c, idx) => {
+                    if(idx === 0) c.classList.add('selected');
+                    else c.classList.remove('selected');
+                });
+                processImageDrawing();
+            });
+        });
+
+        // زر الرجوع للرئيسية وإصلاح الخلل البصري بالكامل
+        homeTriggerBtn.addEventListener('click', () => {
+            showAlert("تنبيه المغادرة ⚠️", "لديك تعديلات غير محفوظة، هل أنت متأكد من العودة لاختيار صورة جديدة؟", true, () => {
+                img = new Image();
+                originalFile = null;
+                imageInput.value = '';
+                previewBox.style.display = 'none';
+                toolbar.style.display = 'none';
+                actionButtons.style.display = 'none';
+                homeTriggerBtn.style.display = 'none';
+                subtitleText.style.display = 'block'; // إعادة إظهار النص الرئيسي للرئيسية
+                uploadLabel.style.display = 'block';
+                panels.forEach(p => p.style.display = 'none');
+                toolButtons.forEach(b => b.classList.remove('active'));
+                document.querySelector('[data-target="filtersPanel"]').classList.add('active');
+                document.getElementById('filtersPanel').style.display = 'flex';
+            });
         });
 
         function resetValuesToDefault() {
@@ -604,21 +953,36 @@
             contrastRange.value = 100;
             saturateRange.value = 100;
             hueRange.value = 0;
+            frameWidthRange.value = 0;
+            textSizeRange.value = 30;
+            textOpacityRange.value = 100;
+            qualityRange.value = 0.8;
+            outputFormat.value = "image/webp";
         }
 
         downloadBtn.addEventListener('click', function() {
+            document.getElementById('beforeImg').src = img.src;
+            document.getElementById('afterImg').src = canvas.toDataURL();
+            document.getElementById('compareModal').style.display = 'flex';
+        });
+
+        confirmDownloadBtn.addEventListener('click', function() {
+            const format = outputFormat.value;
+            const quality = parseFloat(qualityRange.value);
+            const ext = format.split('/')[1];
+
             canvas.toBlob(function(blob) {
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = 'smart-edited-image.png';
+                a.download = `art-piece-${Date.now()}.${ext}`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
-            }, 'image/png');
+                closeCompareModal();
+            }, format, quality);
         });
     </script>
-
 </body>
 </html>
