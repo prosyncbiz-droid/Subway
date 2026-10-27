@@ -1,0 +1,2458 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Vexlii - استوديو التصميم الحر المتقدم والآمن</title>
+
+    <!-- PWA / تطبيق -->
+    <meta name="theme-color" content="#6d28d9">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Vexlii">
+    <meta name="application-name" content="Vexlii">
+    <meta name="description" content="استوديو تصميم وتعديل وضغط الصور باحترافية وأمان">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        body {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
+            color: #f8fafc;
+            padding: 15px;
+            padding-top: max(15px, env(safe-area-inset-top));
+            padding-bottom: max(15px, env(safe-area-inset-bottom));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            min-height: 100dvh;
+            -webkit-tap-highlight-color: transparent;
+            overscroll-behavior: none;
+        }
+        .container {
+            width: 100%;
+            max-width: 520px;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
+            padding: 22px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            color: #1e293b;
+            text-align: center;
+            position: relative;
+        }
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        h1 {
+            font-size: 1.3rem;
+            color: #1e1b4b;
+            font-weight: 800;
+        }
+        .back-home-btn {
+            background: #ffe4e6;
+            color: #e11d48;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: none;
+            transition: 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .back-home-btn:hover {
+            background: #fecdd3;
+        }
+        p.subtitle {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 18px;
+            font-weight: 600;
+        }
+        .upload-area {
+            border: 2px dashed #8b5cf6;
+            border-radius: 18px;
+            padding: 28px 20px;
+            background: linear-gradient(145deg, #f3e8ff, #ede9fe);
+            cursor: pointer;
+            margin-bottom: 12px;
+            display: block;
+            transition: 0.3s;
+        }
+        .upload-area:hover {
+            border-color: #7c3aed;
+            transform: scale(1.01);
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .btn-scratch-start {
+            background: linear-gradient(135deg, #a855f7, #6b21a8);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 18px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 6px 16px rgba(168, 85, 247, 0.35);
+            display: block;
+            margin-bottom: 25px;
+        }
+        .btn-scratch-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(168, 85, 247, 0.45);
+        }
+        .decorative-tags {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #e2e8f0;
+            pointer-events: none;
+        }
+        .tag-pill {
+            background: #f1f5f9;
+            color: #64748b;
+            border: 1px solid #cbd5e1;
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+        .preview-box {
+            width: 100%;
+            margin-bottom: 15px;
+            display: none;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #0f172a;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            max-height: 380px;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            touch-action: none;
+        }
+        .preview-box canvas {
+            max-width: 100%;
+            max-height: 380px;
+            object-fit: contain;
+            display: block;
+        }
+        .floating-action-bar {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 16px;
+            border-radius: 30px;
+            display: none;
+            gap: 10px;
+            align-items: center;
+            z-index: 10;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        .floating-btn {
+            background: transparent;
+            border: none;
+            color: #f87171;
+            font-size: 0.85rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: 0.2s;
+        }
+        .floating-btn:hover {
+            color: #ef4444;
+            transform: scale(1.05);
+        }
+        .toolbar {
+            display: none;
+            gap: 4px;
+            margin-bottom: 15px;
+            justify-content: space-between;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+        .tool-btn {
+            flex: 1;
+            min-width: 58px;
+            background: #f1f5f9;
+            color: #475569;
+            border: none;
+            padding: 9px 3px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            white-space: nowrap;
+        }
+        .tool-btn.active {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            color: white;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+        }
+        .panel-section {
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            text-align: right;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 16px;
+            border-radius: 14px;
+            margin-bottom: 15px;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .control-group label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #334155;
+            display: flex;
+            justify-content: space-between;
+        }
+        input[type="range"] {
+            width: 100%;
+            accent-color: #8b5cf6;
+            cursor: pointer;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            font-weight: bold;
+            color: #334155;
+            outline: none;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            font-weight: bold;
+            color: #334155;
+            outline: none;
+        }
+        .color-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .color-picker-grid {
+            display: flex;
+            gap: 8px;
+            justify-content: space-between;
+            flex: 1;
+        }
+        .color-dot {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid #e2e8f0;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .color-dot.selected {
+            transform: scale(1.15);
+            border-color: #8b5cf6;
+            box-shadow: 0 0 8px rgba(139, 92, 246, 0.5);
+        }
+        .stats-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 5px;
+            font-size: 0.78rem;
+            font-weight: bold;
+            text-align: center;
+        }
+        .stat-item {
+            background: #ffffff;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+        }
+        .stat-item span {
+            color: #8b5cf6;
+        }
+        .filters-grid, .frames-grid, .shapes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        .filter-card, .frame-card, .shape-card {
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            padding: 9px 4px;
+            border-radius: 10px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.2s;
+            color: #475569;
+        }
+        .filter-card:hover, .filter-card.selected,
+        .frame-card:hover, .frame-card.selected,
+        .shape-card:hover, .shape-card.selected {
+            border-color: #8b5cf6;
+            background: #f3e8ff;
+            color: #7c3aed;
+        }
+        .crop-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+        .btn {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            width: 100%;
+            cursor: pointer;
+            font-weight: 700;
+            transition: 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 8px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+        .btn:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #334155;
+            box-shadow: none;
+        }
+        .layers-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-height: 160px;
+            overflow-y: auto;
+        }
+        .layer-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #334155;
+        }
+        .layer-row button {
+            background: #f1f5f9;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #7c3aed;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-box {
+            background: #fff;
+            padding: 22px;
+            border-radius: 20px;
+            width: 92%;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-box h3 {
+            margin-bottom: 8px;
+            color: #0f172a;
+            font-weight: 800;
+        }
+        .modal-box p {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 15px;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .comparison-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .comparison-item span {
+            font-size: 0.75rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+            color: #475569;
+        }
+        .comparison-item img {
+            width: 100%;
+            height: 140px;
+            object-fit: contain;
+            border-radius: 10px;
+            background: #0f172a;
+            border: 1px solid #e2e8f0;
+        }
+        .instagram-footer {
+            margin-top: 15px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 12px;
+            text-align: center;
+            display: none;
+        }
+        .instagram-link {
+            color: #e1306c;
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+        }
+        .instagram-link:hover {
+            opacity: 0.8;
+        }
+
+        /* زر الهمبرغر (ثلاث خطوط) */
+        .menu-toggle-btn {
+            background: #f1f5f9;
+            border: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            padding: 10px;
+            transition: 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            flex-shrink: 0;
+        }
+        .menu-toggle-btn:hover {
+            background: #e2e8f0;
+            transform: scale(1.05);
+        }
+        .menu-toggle-btn span {
+            display: block;
+            width: 20px;
+            height: 2.5px;
+            background: #1e1b4b;
+            border-radius: 2px;
+            transition: 0.25s;
+        }
+        .menu-toggle-btn.active span:nth-child(1) {
+            transform: translateY(7.5px) rotate(45deg);
+        }
+        .menu-toggle-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .menu-toggle-btn.active span:nth-child(3) {
+            transform: translateY(-7.5px) rotate(-45deg);
+        }
+
+        /* القائمة المنبثقة من الأسفل */
+        .bottom-sheet-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: none;
+            justify-content: flex-end;
+            align-items: flex-end;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .bottom-sheet-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+        .bottom-sheet {
+            background: #ffffff;
+            width: 100%;
+            max-width: 520px;
+            margin: 0 auto;
+            border-radius: 24px 24px 0 0;
+            padding: 20px 22px 30px;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
+            transform: translateY(100%);
+            transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        .bottom-sheet-overlay.show .bottom-sheet {
+            transform: translateY(0);
+        }
+        .bottom-sheet-handle {
+            width: 42px;
+            height: 5px;
+            background: #cbd5e1;
+            border-radius: 10px;
+            margin: 0 auto 18px;
+        }
+        .bottom-sheet-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .sheet-link-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+            text-decoration: none;
+            color: #1e293b;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .sheet-link-btn:hover {
+            background: #f1f5f9;
+            border-color: #c4b5fd;
+            transform: translateY(-1px);
+        }
+        .sheet-link-btn.instagram {
+            color: #e1306c;
+            border-color: #fce7f3;
+            background: #fdf2f8;
+        }
+        .sheet-link-btn.nibra {
+            color: #4f46e5;
+            border-color: #e0e7ff;
+            background: #eef2ff;
+        }
+        .sheet-link-btn .icon {
+            font-size: 1.25rem;
+            width: 28px;
+            text-align: center;
+        }
+        .sheet-close-btn {
+            width: 100%;
+            margin-top: 8px;
+            background: #e2e8f0;
+            color: #475569;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        /* زر المشاركة بعد التنزيل */
+        .btn-share {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+            margin-top: 8px;
+        }
+        .btn-share:hover {
+            opacity: 0.95;
+        }
+        .share-success-msg {
+            font-size: 0.8rem;
+            color: #059669;
+            font-weight: 700;
+            margin-top: 8px;
+            display: none;
+        }
+
+        /* شريط تثبيت التطبيق — غير مزعج */
+        .install-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 3000;
+            display: none;
+            justify-content: center;
+            padding: 10px 12px;
+            padding-top: max(10px, env(safe-area-inset-top));
+            background: linear-gradient(135deg, #5b21b6, #7c3aed);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(91, 33, 182, 0.35);
+            animation: installSlideDown 0.35s ease;
+        }
+        .install-banner.show {
+            display: flex;
+        }
+        @keyframes installSlideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .install-banner-inner {
+            width: 100%;
+            max-width: 520px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .install-banner-text {
+            flex: 1;
+            text-align: right;
+            font-size: 0.82rem;
+            font-weight: 700;
+            line-height: 1.35;
+        }
+        .install-banner-text small {
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 500;
+            opacity: 0.9;
+            margin-top: 2px;
+        }
+        .install-banner-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        .install-btn {
+            background: #fff;
+            color: #6d28d9;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 0.78rem;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            white-space: nowrap;
+        }
+        .install-dismiss {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.45);
+            color: #fff;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        body.has-install-banner {
+            padding-top: 70px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- شريط تثبيت التطبيق -->
+    <div class="install-banner" id="installBanner">
+        <div class="install-banner-inner">
+            <div class="install-banner-text">
+                ثبّت Vexlii كتطبيق
+                <small id="installBannerHint">يفتح بسرعة من سطح المكتب أو الشاشة الرئيسية</small>
+            </div>
+            <div class="install-banner-actions">
+                <button class="install-btn" id="installAppBtn">تثبيت</button>
+                <button class="install-dismiss" id="installDismissBtn" aria-label="إغلاق">×</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header-bar">
+            <h1>✨ استوديو Vexlii</h1>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <button class="back-home-btn" id="homeTriggerBtn">↩️ رجوع للرئيسية</button>
+                <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="القائمة">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+        <p class="subtitle" id="subtitleText">عدل وضبط صورك بأمان تام وأدوات احترافية ✨</p>
+
+        <!-- الواجهة الرئيسية -->
+        <div id="mainWelcomeSection">
+            <label class="upload-area" id="uploadLabel">
+                <p style="color: #7c3aed; font-weight: 800; font-size: 1.05rem;">📁 اضغط هنا لاختيار صورة آمنة</p>
+                <span style="font-size: 0.75rem; color: #8b5cf6; display: block; margin-top: 5px;">يدعم PNG, JPG, WEBP, GIF, BMP</span>
+            </label>
+
+            <button class="btn-scratch-start" id="openScratchModalBtn">✨ بدء تصميم جديد بمقاسات مخصصة</button>
+
+            <div class="decorative-tags">
+                <div class="tag-pill">تصميم</div>
+                <div class="tag-pill">Vexlii</div>
+                <div class="tag-pill">اختيار صور</div>
+                <div class="tag-pill">تعديل</div>
+            </div>
+        </div>
+
+        <input type="file" id="imageInput" accept="image/jpeg, image/png, image/webp, image/gif, image/bmp">
+        <input type="file" id="layerImageInput" accept="image/jpeg, image/png, image/webp, image/gif, image/bmp">
+
+        <div class="preview-box" id="previewBox">
+            <div class="floating-action-bar" id="floatingActionBar">
+                <button class="floating-btn" id="deleteLayerBtn">🗑️ حذف العنصر المحدد</button>
+            </div>
+            <canvas id="imageCanvas"></canvas>
+        </div>
+
+        <!-- 1. شريط النمط الكلاسيكي -->
+        <div class="toolbar" id="classicToolbar">
+            <button class="tool-btn active" data-target="filtersPanel">🎨 فلاتر</button>
+            <button class="tool-btn" data-target="cropPanel">✂️ قص</button>
+            <button class="tool-btn" data-target="rotatePanel">🔄 تدوير</button>
+            <button class="tool-btn" data-target="textPanel">✍️ كتابة</button>
+            <button class="tool-btn" data-target="framePanel">🖼️ إطارات</button>
+            <button class="tool-btn" data-target="adjustPanel">⚙️ ألوان</button>
+            <button class="tool-btn" data-target="compressPanel">🗜️ ضغط</button>
+            <button class="tool-btn" id="resetTriggerBtnClassic" style="background:#fee2e2; color:#dc2626;">🔄 إعادة</button>
+        </div>
+
+        <!-- 2. شريط النمط الحر المطور -->
+        <div class="toolbar" id="scratchToolbar">
+            <button class="tool-btn active" data-target="scratchTextPanel">✍️ نص</button>
+            <button class="tool-btn" data-target="shapesPanel">🔷 أشكال</button>
+            <button class="tool-btn" data-target="drawPanel">🖌️ رسم</button>
+            <button class="tool-btn" data-target="layersPanel">📚 الطبقات</button>
+            <button class="tool-btn" data-target="bgColorPanel">🎨 خلفية</button>
+            <button class="tool-btn" id="addLayerImageBtn">🖼️ صورة</button>
+            <button class="tool-btn" id="resetScratchBtn" style="background:#fee2e2; color:#dc2626;">🔄 إعادة</button>
+        </div>
+
+        <!-- الألواح الكلاسيكية -->
+        <div class="panel-section" id="filtersPanel">
+            <p style="font-size: 0.8rem; font-weight: 800; color: #1e293b;">اختر فلتر جاهز:</p>
+            <div class="filters-grid">
+                <div class="filter-card selected" onclick="applyPreset('normal')">طبيعي</div>
+                <div class="filter-card" onclick="applyPreset('warm')">دافئ</div>
+                <div class="filter-card" onclick="applyPreset('cold')">بارد</div>
+                <div class="filter-card" onclick="applyPreset('bw')">أبيض وأسود</div>
+                <div class="filter-card" onclick="applyPreset('cinematic')">سينمائي</div>
+            </div>
+        </div>
+
+        <div class="panel-section" id="cropPanel">
+            <p style="font-size: 0.8rem; font-weight: 800; color: #1e293b;">اختر قياس القص:</p>
+            <div class="crop-grid">
+                <button class="btn btn-secondary" style="margin:0; font-size:0.8rem;" onclick="cropImage(1, 1)">مربع (1:1)</button>
+                <button class="btn btn-secondary" style="margin:0; font-size:0.8rem;" onclick="cropImage(4, 3)">أفقي (4:3)</button>
+                <button class="btn btn-secondary" style="margin:0; font-size:0.8rem;" onclick="cropImage(16, 9)">عريض (16:9)</button>
+                <button class="btn btn-secondary" style="margin:0; font-size:0.8rem;" onclick="cropImage('circle', 'circle')">قص دائري ⭕</button>
+                <button class="btn btn-secondary" style="grid-column: span 2; margin:0; font-size:0.8rem;" onclick="cropImage(0, 0)">إلغاء القص</button>
+            </div>
+        </div>
+
+        <div class="panel-section" id="rotatePanel">
+            <p style="font-size: 0.8rem; font-weight: 800; color: #1e293b;">تدوير الصورة:</p>
+            <button class="btn btn-secondary" style="margin:0;" onclick="rotateImage()">🔄 تدوير 90 درجة يميناً</button>
+        </div>
+
+        <div class="panel-section" id="textPanel">
+            <div class="control-group">
+                <label>النص المراد كتابته:</label>
+                <input type="text" id="textInput" placeholder="اكتب النص هنا..." maxlength="100">
+            </div>
+            <div class="control-group">
+               <label>اختر لون الخط:</label>
+                <div class="color-row">
+                    <div class="color-picker-grid">
+                        <div class="color-dot selected" style="background: #ffffff;" onclick="setTextColor('#ffffff')"></div>
+                        <div class="color-dot" style="background: #000000;" onclick="setTextColor('#000000')"></div>
+                        <div class="color-dot" style="background: #ef4444;" onclick="setTextColor('#ef4444')"></div>
+                        <div class="color-dot" style="background: #f59e0b;" onclick="setTextColor('#f59e0b')"></div>
+                        <div class="color-dot" style="background: #10b981;" onclick="setTextColor('#10b981')"></div>
+                        <div class="color-dot" style="background: #8b5cf6;" onclick="setTextColor('#8b5cf6')"></div>
+                    </div>
+                    <input type="text" id="textColorHex" placeholder="#Hex" maxlength="15" style="width: 85px; font-size:0.75rem; text-align:center;" oninput="handleHexInput(this, setTextColor)">
+                </div>
+            </div>
+            <div class="control-group">
+                <label>الشفافية: <span id="textOpacityVal">100</span>%</label>
+                <input type="range" id="textOpacityRange" min="10" max="100" value="100">
+            </div>
+            <div class="control-group">
+                <label>حجم الخط: <span id="textSizeVal">30</span>px</label>
+                <input type="range" id="textSizeRange" min="12" max="100" value="30">
+            </div>
+        </div>
+
+        <div class="panel-section" id="framePanel">
+            <p style="font-size: 0.8rem; font-weight: 800; color: #1e293b;">اختر نمط الإطار:</p>
+            <div class="frames-grid">
+                <div class="frame-card selected" onclick="setFrameStyle('none')">بدون إطار</div>
+                <div class="frame-card" onclick="setFrameStyle('white')">أبيض ناصع</div>
+                <div class="frame-card" onclick="setFrameStyle('black')">أسود فاخر</div>
+                <div class="frame-card" onclick="setFrameStyle('gold')">ذهبي ملكي</div>
+                <div class="frame-card" onclick="setFrameStyle('neon')">نيون متدرج 🌟</div>
+                <div class="frame-card" onclick="setFrameStyle('double')">زخرفة مزدوجة ✨</div>
+            </div>
+            <div class="control-group" style="margin-top: 10px;">
+                <label>سمك الإطار: <span id="frameWidthVal">0</span>px</label>
+                <input type="range" id="frameWidthRange" min="0" max="50" value="0">
+            </div>
+        </div>
+
+        <div class="panel-section" id="adjustPanel">
+            <div class="control-group">
+                <label>السطوع: <span id="brightnessVal">100</span>%</label>
+                <input type="range" id="brightnessRange" min="0" max="200" value="100">
+            </div>
+            <div class="control-group">
+                <label>التباين: <span id="contrastVal">100</span>%</label>
+                <input type="range" id="contrastRange" min="0" max="200" value="100">
+            </div>
+            <div class="control-group">
+                <label>تشبع الألوان: <span id="saturateVal">100</span>%</label>
+                <input type="range" id="saturateRange" min="0" max="200" value="100">
+            </div>
+            <div class="control-group">
+                <label>تدرج اللون: <span id="hueVal">0</span>°</label>
+                <input type="range" id="hueRange" min="-180" max="180" value="0">
+            </div>
+        </div>
+
+        <div class="panel-section" id="compressPanel">
+            <div class="control-group">
+                <label>الصيغة المستهدفة:</label>
+                <select id="outputFormat">
+                    <option value="image/webp">WEBP (ضغط مميز وحجم صغير)</option>
+                    <option value="image/jpeg">JPG (الصيغة القياسية)</option>
+                    <option value="image/png">PNG (دقة عالية وشفافية)</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label>جودة الصورة والضغط: <span id="qualityVal">80</span>%</label>
+                <input type="range" id="qualityRange" min="0.1" max="1.0" step="0.05" value="0.8">
+            </div>
+            <div class="stats-box">
+                <div class="stat-item">الحجم الأصلي: <br><span id="originalSize">0 KB</span></div>
+                <div class="stat-item">الحجم المتوقع: <br><span id="newSize">0 KB</span></div>
+            </div>
+        </div>
+                <!-- الألواح الحرة المحدثة -->
+        <div class="panel-section" id="scratchTextPanel">
+            <button class="btn btn-secondary" id="addNewTextLayerBtn" style="margin-bottom: 8px;">➕ إضافة عنوان/نص جديد</button>
+            <div class="control-group">
+                <label>تعديل النص المحدد:</label>
+                <input type="text" id="scratchTextInput" placeholder="اختر نصاً او انقر فوقه..." maxlength="100">
+            </div>
+            <div class="control-group">
+                <label>لون النص:</label>
+                <div class="color-row">
+                    <div class="color-picker-grid">
+                        <div class="color-dot selected" style="background: #ffffff;" onclick="setScratchTextColor('#ffffff')"></div>
+                        <div class="color-dot" style="background: #000000;" onclick="setScratchTextColor('#000000')"></div>
+                        <div class="color-dot" style="background: #ef4444;" onclick="setScratchTextColor('#ef4444')"></div>
+                        <div class="color-dot" style="background: #f59e0b;" onclick="setScratchTextColor('#f59e0b')"></div>
+                        <div class="color-dot" style="background: #10b981;" onclick="setScratchTextColor('#10b981')"></div>
+                        <div class="color-dot" style="background: #8b5cf6;" onclick="setScratchTextColor('#8b5cf6')"></div>
+                    </div>
+                    <input type="text" id="scratchTextColorHex" placeholder="Hex#" maxlength="15" style="width: 85px; font-size:0.75rem; text-align:center;" oninput="handleHexInput(this, setScratchTextColor)">
+                </div>
+            </div>
+            <div class="control-group">
+                <label>حجم النص المحدد: <span id="scratchTextSizeVal">35</span>px</label>
+                <input type="range" id="scratchTextSizeRange" min="15" max="150" value="35">
+            </div>
+            <div class="control-group">
+                <label>شفافية العنصر: <span id="elementOpacityVal">100</span>%</label>
+                <input type="range" id="elementOpacityRange" min="10" max="100" value="100">
+            </div>
+        </div>
+
+        <!-- لوحة الأشكال الهندسية وميزاتها -->
+        <div class="panel-section" id="shapesPanel">
+            <p style="font-size: 0.8rem; font-weight: 800; color: #1e293b;">أضف شكلاً هندسياً:</p>
+            <div class="shapes-grid">
+                <div class="shape-card" onclick="addShapeLayer('rect')">مستطيل ⬛</div>
+                <div class="shape-card" onclick="addShapeLayer('circle')">دائرة ⚪</div>
+                <div class="shape-card" onclick="addShapeLayer('triangle')">مثلث 🔺</div>
+                <div class="shape-card" onclick="addShapeLayer('line')">خط مستقيم ➖</div>
+                <div class="shape-card" onclick="addShapeLayer('arrow')">سهم ➡️</div>
+            </div>
+            <div class="control-group" style="margin-top: 10px;">
+                <label>لون الشكل المحدد:</label>
+                <div class="color-row">
+                    <div class="color-picker-grid">
+                        <div class="color-dot" style="background: #ffffff;" onclick="setShapeColor('#ffffff')"></div>
+                        <div class="color-dot selected" style="background: #000000;" onclick="setShapeColor('#000000')"></div>
+                        <div class="color-dot" style="background: #ef4444;" onclick="setShapeColor('#ef4444')"></div>
+                        <div class="color-dot" style="background: #f59e0b;" onclick="setShapeColor('#f59e0b')"></div>
+                        <div class="color-dot" style="background: #10b981;" onclick="setShapeColor('#10b981')"></div>
+                        <div class="color-dot" style="background: #8b5cf6;" onclick="setShapeColor('#8b5cf6')"></div>
+                    </div>
+                    <input type="text" id="shapeColorHex" placeholder="Hex#" maxlength="15" style="width: 85px; font-size:0.75rem; text-align:center;" oninput="handleHexInput(this, setShapeColor)">
+                </div>
+            </div>
+        </div>
+
+        <!-- لوحة الرسم الحر متعدد الألوان -->
+        <div class="panel-section" id="drawPanel">
+            <p style="font-size: 0.8rem; font-weight: 800; color: #1e293b;">أداة الرسم الحر 🖌️ (خلف العناصر تماماً):</p>
+            <div class="control-group">
+                <label>اختر لون الفرشاة:</label>
+                <div class="color-row">
+                    <div class="color-picker-grid">
+                        <div class="color-dot selected" style="background: #ef4444;" onclick="setBrushColor('#ef4444')"></div>
+                        <div class="color-dot" style="background: #3b82f6;" onclick="setBrushColor('#3b82f6')"></div>
+                        <div class="color-dot" style="background: #10b981;" onclick="setBrushColor('#10b981')"></div>
+                        <div class="color-dot" style="background: #f59e0b;" onclick="setBrushColor('#f59e0b')"></div>
+                        <div class="color-dot" style="background: #000000;" onclick="setBrushColor('#000000')"></div>
+                        <div class="color-dot" style="background: #8b5cf6;" onclick="setBrushColor('#8b5cf6')"></div>
+                    </div>
+                    <input type="text" id="brushColorHex" placeholder="Hex#" maxlength="15" style="width: 85px; font-size:0.75rem; text-align:center;" oninput="handleHexInput(this, setBrushColor)">
+                </div>
+            </div>
+            <div class="control-group">
+                <label>سمك الفرشاة: <span id="brushSizeVal">8</span>px</label>
+                <input type="range" id="brushSizeRange" min="2" max="40" value="8">
+            </div>
+            <button class="btn btn-danger" style="padding: 8px; font-size:0.78rem;" onclick="clearDrawings()">مسح رسومات الفرشاة ❌</button>
+        </div>
+
+        <!-- لوحة تعديل حواف الصور المضافة -->
+        <div class="panel-section" id="imageAdjustLayerPanel">
+            <p style="font-size: 0.8rem; font-weight: 800; color: #1e293b;">ضبط حواف الصورة المحددة:</p>
+            <div class="control-group">
+                <label>استدارة الزوايا (Border Radius): <span id="imgRadiusVal">0</span>px</label>
+                <input type="range" id="imgRadiusRange" min="0" max="100" value="0">
+            </div>
+        </div>
+
+        <!-- لوحة الطبقات -->
+        <div class="panel-section" id="layersPanel">
+            <p style="font-size: 0.8rem; font-weight: 800; color: #1e293b;">إدارة وترتيب الطبقات 📚:</p>
+            <div class="layers-list" id="layersContainerList"></div>
+        </div>
+
+        <!-- لوحة خلفية اللوحة -->
+        <div class="panel-section" id="bgColorPanel">
+            <p style="font-size: 0.8rem; font-weight: 800; color: #1e293b;">اختر لون خلفية اللوحة:</p>
+            <div class="color-row">
+                <div class="color-picker-grid">
+                    <div class="color-dot selected" style="background: #ffffff;" onclick="setCanvasBgColor('#ffffff')"></div>
+                    <div class="color-dot" style="background: #0f172a;" onclick="setCanvasBgColor('#0f172a')"></div>
+                    <div class="color-dot" style="background: #f43f5e;" onclick="setCanvasBgColor('#f43f5e')"></div>
+                    <div class="color-dot" style="background: #3b82f6;" onclick="setCanvasBgColor('#3b82f6')"></div>
+                    <div class="color-dot" style="background: #10b981;" onclick="setCanvasBgColor('#10b981')"></div>
+                    <div class="color-dot" style="background: #8b5cf6;" onclick="setCanvasBgColor('#8b5cf6')"></div>
+                </div>
+                <input type="text" id="bgColorHex" placeholder="Hex#" maxlength="15" style="width: 85px; font-size:0.75rem; text-align:center;" oninput="handleHexInput(this, setCanvasBgColor)">
+            </div>
+        </div>
+
+        <div id="actionButtons" style="display: none;">
+            <button class="btn btn-success" id="downloadBtn">📥 معاينة وحفظ الصورة للمعرض</button>
+        </div>
+    </div>
+
+    <!-- القائمة المنبثقة من الأسفل (روابط المشاريع) -->
+    <div class="bottom-sheet-overlay" id="bottomSheetOverlay">
+        <div class="bottom-sheet" id="bottomSheet">
+            <div class="bottom-sheet-handle"></div>
+            <div class="bottom-sheet-title">مشاريع وأدوات أخرى ✨</div>
+            
+            <a href="https://www.instagram.com/toolbox_1?xtok=MXhzMXh3cXVodzVtOQ==" target="_blank" class="sheet-link-btn instagram" rel="noopener">
+                <span class="icon">📸</span>
+                <span>تابعني على إنستغرام</span>
+            </a>
+            
+            <a href="https://nibra.netlify.app" target="_blank" class="sheet-link-btn nibra" rel="noopener">
+                <span class="icon">🌐</span>
+                <span>موقع Nibra</span>
+            </a>
+            
+            <button class="sheet-close-btn" id="closeBottomSheetBtn">إغلاق</button>
+        </div>
+    </div>
+
+    <!-- نافذة تحديد المقاسات (مع حماية أرقام صارمة بحد أقصى 15 رقماً) -->
+    <div class="modal-overlay" id="scratchModal">
+        <div class="modal-box">
+            <h3>✨ بدء تصميم جديد</h3>
+            <p>حدد أبعاد اللوحة التي تريد البدء بها (بحد أقصى 4000 بكسل):</p>
+            <div class="control-group" style="margin-bottom:10px; text-align:right;">
+                <label>العرض (Width):</label>
+                <input type="text" inputmode="numeric" id="canvasWidthInput" value="1080" maxlength="15" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 15)">
+            </div>
+            <div class="control-group" style="margin-bottom:15px; text-align:right;">
+                <label>الارتفاع (Height):</label>
+                <input type="text" inputmode="numeric" id="canvasHeightInput" value="1080" maxlength="15" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 15)">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-success" id="confirmScratchBtn">إنشاء اللوحة 🎨</button>
+                <button class="btn btn-secondary" onclick="closeScratchModal()">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة اختيار مصدر رفع الصورة -->
+    <div class="modal-overlay" id="imageSourceModal">
+        <div class="modal-box">
+            <h3>🌐 مصدر الصورة</h3>
+            <p>اختر من أين تريد جلب الصورة:</p>
+            <button class="btn" id="pickFromGalleryBtn" style="margin-bottom: 10px;">📱 من معرض الجوال / الجهاز</button>
+            <button class="btn btn-secondary" id="pickFromUrlBtn" style="margin-bottom: 15px;">🌐 من الإنترنت (رابط مباشر)</button>
+            <button class="btn btn-secondary" onclick="closeImageSourceModal()">إلغاء</button>
+        </div>
+    </div>
+
+    <!-- نافذة إدخال رابط الإنترنت المباشر للصورة -->
+    <div class="modal-overlay" id="urlInputModal">
+        <div class="modal-box">
+            <h3>🔗 إدخال رابط الصورة</h3>
+            <p>ألصق رابط الصورة المباشر من الإنترنت هنا (ينتهي بصيغة صورة):</p>
+            <div class="control-group" style="margin-bottom: 15px; text-align: right;">
+                <input type="text" id="imageUrlInput" placeholder="https://example.com/image.jpg" maxlength="300">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-success" id="confirmImageUrlBtn">تحميل الصورة 🚀</button>
+                <button class="btn btn-secondary" onclick="closeUrlInputModal()">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة منبثقة عامة للتنبيهات والمقارنة -->
+    <div class="modal-overlay" id="customModal">
+        <div class="modal-box">
+            <h3 id="modalTitle">تنبيه</h3>
+            <p id="modalMessage">رسالة التنبيه...</p>
+            <div class="modal-actions" id="modalActions">
+                <button class="btn" onclick="closeModal()">حسناً</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة مقارنة قبل وبعد وحفظ الصورة -->
+    <div class="modal-overlay" id="compareModal">
+        <div class="modal-box" style="max-width: 480px;">
+            <h3>✨ معاينة الصورة النهائية</h3>
+            <p>تحقق من جودة التصميم قبل الحفظ:</p>
+            <div class="comparison-grid">
+                <div class="comparison-item" id="beforeItem">
+                    <span>الصورة الأصلية</span>
+                    <img id="beforeImg" src="" alt="Before">
+                </div>
+                <div class="comparison-item" id="afterItemSingle" style="grid-column: span 1;">
+                    <span>النتيجة النهائية (Vexlii)</span>
+                    <img id="afterImg" src="" alt="After">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-success" id="confirmDownloadBtn">💾 تنزيل نهائي</button>
+                <button class="btn btn-secondary" onclick="closeCompareModal()">تعديل إضافي</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const layerImageInput = document.getElementById('layerImageInput');
+        const uploadLabel = document.getElementById('uploadLabel');
+        const previewBox = document.getElementById('previewBox');
+        const canvas = document.getElementById('imageCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        const mainWelcomeSection = document.getElementById('mainWelcomeSection');
+        const classicToolbar = document.getElementById('classicToolbar');
+        const scratchToolbar = document.getElementById('scratchToolbar');
+        const actionButtons = document.getElementById('actionButtons');
+        const homeTriggerBtn = document.getElementById('homeTriggerBtn');
+        const subtitleText = document.getElementById('subtitleText');
+
+        const openScratchModalBtn = document.getElementById('openScratchModalBtn');
+        const scratchModal = document.getElementById('scratchModal');
+        const confirmScratchBtn = document.getElementById('confirmScratchBtn');
+        const canvasWidthInput = document.getElementById('canvasWidthInput');
+        const canvasHeightInput = document.getElementById('canvasHeightInput');
+
+        const imageSourceModal = document.getElementById('imageSourceModal');
+        const pickFromGalleryBtn = document.getElementById('pickFromGalleryBtn');
+        const pickFromUrlBtn = document.getElementById('pickFromUrlBtn');
+        const urlInputModal = document.getElementById('urlInputModal');
+        const imageUrlInput = document.getElementById('imageUrlInput');
+        const confirmImageUrlBtn = document.getElementById('confirmImageUrlBtn');
+
+        const textInput = document.getElementById('textInput');
+        const textOpacityRange = document.getElementById('textOpacityRange');
+        const textOpacityVal = document.getElementById('textOpacityVal');
+        const textSizeRange = document.getElementById('textSizeRange');
+        const textSizeVal = document.getElementById('textSizeVal');
+
+        const scratchTextInput = document.getElementById('scratchTextInput');
+        const scratchTextSizeRange = document.getElementById('scratchTextSizeRange');
+        const scratchTextSizeVal = document.getElementById('scratchTextSizeVal');
+        const elementOpacityRange = document.getElementById('elementOpacityRange');
+        const elementOpacityVal = document.getElementById('elementOpacityVal');
+        const addNewTextLayerBtn = document.getElementById('addNewTextLayerBtn');
+
+        const imgRadiusRange = document.getElementById('imgRadiusRange');
+        const imgRadiusVal = document.getElementById('imgRadiusVal');
+
+        const brightnessRange = document.getElementById('brightnessRange');
+        const contrastRange = document.getElementById('contrastRange');
+        const saturateRange = document.getElementById('saturateRange');
+        const hueRange = document.getElementById('hueRange');
+        const frameWidthRange = document.getElementById('frameWidthRange');
+        const frameWidthVal = document.getElementById('frameWidthVal');
+
+        const brightnessVal = document.getElementById('brightnessVal');
+        const contrastVal = document.getElementById('contrastVal');
+        const saturateVal = document.getElementById('saturateVal');
+        const hueVal = document.getElementById('hueVal');
+
+        const outputFormat = document.getElementById('outputFormat');
+        const qualityRange = document.getElementById('qualityRange');
+        const qualityVal = document.getElementById('qualityVal');
+        const originalSizeSpan = document.getElementById('originalSize');
+        const newSizeSpan = document.getElementById('newSize');
+
+        const downloadBtn = document.getElementById('downloadBtn');
+        const confirmDownloadBtn = document.getElementById('confirmDownloadBtn');
+        const resetTriggerBtnClassic = document.getElementById('resetTriggerBtnClassic');
+        const resetScratchBtn = document.getElementById('resetScratchBtn');
+        const addLayerImageBtn = document.getElementById('addLayerImageBtn');
+
+        const floatingActionBar = document.getElementById('floatingActionBar');
+        const deleteLayerBtn = document.getElementById('deleteLayerBtn');
+
+        // عناصر القائمة
+        const menuToggleBtn = document.getElementById('menuToggleBtn');
+        const bottomSheetOverlay = document.getElementById('bottomSheetOverlay');
+        const closeBottomSheetBtn = document.getElementById('closeBottomSheetBtn');
+
+        let mode = 'classic';
+        let img = new Image();
+        let originalFile = null;
+        let currentCropAspect = 0;
+        let currentFrameColor = 'none';
+        let currentTextColor = '#ffffff';
+        let rotationAngle = 0;
+
+        let scratchCanvasColor = '#ffffff';
+        let layers = [];
+        let activeLayerIndex = -1;
+        let isDragging = false;
+        let isResizing = false;
+        let dragStartX = 0, dragStartY = 0;
+
+        let isDrawingMode = false;
+        let brushColor = '#ef4444';
+        let brushSize = 8;
+        let freehandPaths = [];
+        let currentPath = null;
+
+        let textX = 0;
+        let textY = 0;
+        let isTextInitialized = false;
+
+        // 🛡️ نظام تعقيم النصوص لمنع ثغرات XSS بالكامل
+        function sanitizeInput(str) {
+            if (!str) return '';
+            return String(str).replace(/[&<>"']/g, function(m) {
+                return {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                }[m];
+            });
+        }
+
+        // 🛡️ التحقق من الروابط (منع javascript: و data: الخبيثة)
+        function isSafeImageUrl(url) {
+            if (!url || typeof url !== 'string') return false;
+            const trimmed = url.trim();
+            if (trimmed.length > 500) return false;
+            try {
+                const u = new URL(trimmed);
+                if (u.protocol !== 'https:' && u.protocol !== 'http:') return false;
+                // رفض البروتوكولات الخطرة
+                const lower = trimmed.toLowerCase();
+                if (lower.startsWith('javascript:') || lower.startsWith('data:') || lower.startsWith('vbscript:')) return false;
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // 🛡️ فحص كود اللون (Hex فقط) مع الحماية
+        function handleHexInput(inputEl, callback) {
+            let val = inputEl.value.trim();
+            if (val.length > 15) {
+                val = val.slice(0, 15);
+                inputEl.value = val;
+            }
+            // السماح فقط بأحرف Hex صالحة
+            const cleaned = val.replace(/[^#0-9a-fA-F]/g, '');
+            if (cleaned !== val) inputEl.value = cleaned;
+            const safeVal = sanitizeInput(cleaned);
+            if (/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.test(safeVal) || safeVal.length >= 4) {
+                callback(safeVal);
+            }
+        }
+
+        // 🛡️ فحص بصمة الصور (Magic Bytes) - يمنع الملفات المزيفة وملفات SVG الخبيثة
+        function validateImageMagicBytes(file, callback) {
+            if (!file || !file.type || !file.type.startsWith('image/')) {
+                callback(false);
+                return;
+            }
+            // رفض SVG صراحة (يمكن أن يحتوي سكربتات)
+            if (file.type === 'image/svg+xml' || (file.name && file.name.toLowerCase().endsWith('.svg'))) {
+                callback(false);
+                return;
+            }
+            const blobSlice = file.slice(0, 12);
+            const fileReader = new FileReader();
+            fileReader.onloadend = function(e) {
+                if (!e || !e.target || !e.target.result) {
+                    callback(false);
+                    return;
+                }
+                const arr = new Uint8Array(e.target.result);
+                let header = "";
+                for (let i = 0; i < Math.min(arr.length, 12); i++) {
+                    header += arr[i].toString(16).padStart(2, '0');
+                }
+                const isJpg = header.startsWith("ffd8ff");
+                const isPng = header.startsWith("89504e47");
+                const isGif = header.startsWith("47494638");
+                const isWebp = header.includes("57454250"); // WEBP
+                const isBmp = header.startsWith("424d");
+                callback(isJpg || isPng || isGif || isWebp || isBmp);
+            };
+            fileReader.onerror = function() { callback(false); };
+            fileReader.readAsArrayBuffer(blobSlice);
+        }
+
+        function showAlert(title, message, isConfirm = false, onConfirm = null) {
+            const modal = document.getElementById('customModal');
+            const titleEl = document.getElementById('modalTitle');
+            const msgEl = document.getElementById('modalMessage');
+            const actionsEl = document.getElementById('modalActions');
+
+            titleEl.textContent = title;
+            msgEl.textContent = message;
+
+            if (isConfirm) {
+                actionsEl.innerHTML = `
+                    <button class="btn btn-danger" id="modalConfirmBtn">نعم</button>
+                    <button class="btn btn-secondary" onclick="closeModal()">إلغاء</button>
+                `;
+                document.getElementById('modalConfirmBtn').onclick = () => {
+                    closeModal();
+                    if (onConfirm) onConfirm();
+                };
+            } else {
+                actionsEl.innerHTML = `<button class="btn" onclick="closeModal()">حسناً</button>`;
+            }
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('customModal').style.display = 'none'; }
+        function closeScratchModal() { scratchModal.style.display = 'none'; }
+        function closeCompareModal() { document.getElementById('compareModal').style.display = 'none'; }
+        function closeImageSourceModal() { imageSourceModal.style.display = 'none'; }
+        function closeUrlInputModal() { urlInputModal.style.display = 'none'; }
+
+        uploadLabel.addEventListener('click', () => imageInput.click());
+
+        imageInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.size > 15 * 1024 * 1024) {
+                showAlert("حجم كبير ⚠️", "يرجى اختيار صورة أقل من 15 ميجابايت.");
+                imageInput.value = '';
+                return;
+            }
+
+            validateImageMagicBytes(file, function(isValid) {
+                if (!isValid) {
+                    showAlert("حظر أمني 🛡️", "الملف المرفوع ليس صورة حقيقية صالحة!");
+                    imageInput.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    img = new Image();
+                    img.onload = function() {
+                        if (img.width === 0 || img.height === 0) {
+                            showAlert("ملف غير صالح ⚠️", "الصورة تالفة أو غير مدعومة.");
+                            imageInput.value = '';
+                            return;
+                        }
+
+                        mode = 'classic';
+                        originalFile = file;
+                        originalSizeSpan.textContent = (file.size / 1024).toFixed(1) + ' KB';
+
+                        resetValuesToDefault();
+                        rotationAngle = 0;
+                        currentCropAspect = 0;
+                        isTextInitialized = false;
+
+                        mainWelcomeSection.style.display = 'none';
+                        subtitleText.style.display = 'none';
+                        previewBox.style.display = 'flex';
+                        classicToolbar.style.display = 'flex';
+                        scratchToolbar.style.display = 'none';
+                        actionButtons.style.display = 'block';
+                        homeTriggerBtn.style.display = 'block';
+
+                        document.querySelectorAll('.panel-section').forEach(p => p.style.display = 'none');
+                        document.getElementById('filtersPanel').style.display = 'flex';
+
+                        processImageDrawing();
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        openScratchModalBtn.addEventListener('click', () => { scratchModal.style.display = 'flex'; });
+
+        confirmScratchBtn.addEventListener('click', () => {
+            let w = parseInt(canvasWidthInput.value) || 1080;
+            let h = parseInt(canvasHeightInput.value) || 1080;
+
+            if (w > 4000) w = 4000;
+            if (h > 4000) h = 4000;
+            if (w < 100) w = 100;
+            if (h < 100) h = 100;
+
+            mode = 'scratch';
+            canvas.width = w;
+            canvas.height = h;
+
+            scratchCanvasColor = '#ffffff';
+            layers = [];
+            freehandPaths = [];
+            activeLayerIndex = -1;
+            isDrawingMode = false;
+
+            closeScratchModal();
+
+            mainWelcomeSection.style.display = 'none';
+            subtitleText.style.display = 'none';
+            previewBox.style.display = 'flex';
+            classicToolbar.style.display = 'none';
+            scratchToolbar.style.display = 'flex';
+            actionButtons.style.display = 'block';
+            homeTriggerBtn.style.display = 'block';
+
+            document.querySelectorAll('.panel-section').forEach(p => p.style.display = 'none');
+            document.getElementById('scratchTextPanel').style.display = 'flex';
+
+            renderScratchCanvas();
+        });
+
+        function processImageDrawing() {
+            if (mode !== 'classic' || !img.src) return;
+            floatingActionBar.style.display = 'none';
+
+            let sWidth = img.width;
+            let sHeight = img.height;
+            let sX = 0, sY = 0;
+
+            if (currentCropAspect === 'circle') {
+                const minDim = Math.min(sWidth, sHeight);
+                sX = (sWidth - minDim) / 2;
+                sY = (sHeight - minDim) / 2;
+                sWidth = minDim;
+                sHeight = minDim;
+            } else if (currentCropAspect && currentCropAspect.w !== 0) {
+                const targetRatio = currentCropAspect.w / currentCropAspect.h;
+                const imgRatio = sWidth / sHeight;
+
+                if (imgRatio > targetRatio) {
+                    let newWidth = sHeight * targetRatio;
+                    sX = (sWidth - newWidth) / 2;
+                    sWidth = newWidth;
+                } else {
+                    let newHeight = sWidth / targetRatio;
+                    sY = (sHeight - newHeight) / 2;
+                    sHeight = newHeight;
+                }
+            }
+
+            const frameWidth = parseInt(frameWidthRange.value);
+            frameWidthVal.textContent = frameWidth;
+
+            if (rotationAngle === 90 || rotationAngle === 270) {
+                canvas.width = sHeight + (currentFrameColor !== 'none' ? frameWidth * 2 : 0);
+                canvas.height = sWidth + (currentFrameColor !== 'none' ? frameWidth * 2 : 0);
+            } else {
+                canvas.width = sWidth + (currentFrameColor !== 'none' ? frameWidth * 2 : 0);
+                canvas.height = sHeight + (currentFrameColor !== 'none' ? frameWidth * 2 : 0);
+            }
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (currentFrameColor !== 'none' && frameWidth > 0) {
+                if (currentFrameColor === 'white') {
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                } else if (currentFrameColor === 'black') {
+                    ctx.fillStyle = '#0f172a';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                } else if (currentFrameColor === 'gold') {
+                    const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+                    grad.addColorStop(0, '#f59e0b');
+                    grad.addColorStop(0.5, '#fef08a');
+                    grad.addColorStop(1, '#d97706');
+                    ctx.fillStyle = grad;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                } else if (currentFrameColor === 'neon') {
+                    const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+                    grad.addColorStop(0, '#8b5cf6');
+                    grad.addColorStop(0.5, '#ec4899');
+                    grad.addColorStop(1, '#3b82f6');
+                    ctx.fillStyle = grad;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                } else if (currentFrameColor === 'double') {
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.strokeStyle = '#8b5cf6';
+                    ctx.lineWidth = Math.max(2, frameWidth / 4);
+                    ctx.strokeRect(frameWidth / 2, frameWidth / 2, canvas.width - frameWidth, canvas.height - frameWidth);
+                }
+            }
+
+            ctx.save();
+            const drawX = currentFrameColor !== 'none' ? frameWidth : 0;
+            const drawY = currentFrameColor !== 'none' ? frameWidth : 0;
+
+            if (rotationAngle > 0) {
+                ctx.translate(canvas.width / 2, canvas.height / 2);
+                ctx.rotate((rotationAngle * Math.PI) / 180);
+                ctx.translate(-sWidth / 2, -sHeight / 2);
+            } else {
+                ctx.translate(drawX, drawY);
+            }
+
+            if (currentCropAspect === 'circle') {
+                ctx.beginPath();
+                ctx.arc(sWidth / 2, sHeight / 2, sWidth / 2, 0, Math.PI * 2);
+                ctx.clip();
+            }
+
+            ctx.filter = `brightness(${brightnessRange.value}%) contrast(${contrastRange.value}%) saturate(${saturateRange.value}%) hue-rotate(${hueRange.value}deg)`;
+            ctx.drawImage(img, sX, sY, sWidth, sHeight, 0, 0, sWidth, sHeight);
+            ctx.restore();
+
+            if (!isTextInitialized) {
+                textX = canvas.width / 2;
+                textY = canvas.height - 40;
+                isTextInitialized = true;
+            }
+
+            const rawText = textInput.value.trim();
+            if (rawText) {
+                const safeText = sanitizeInput(rawText);
+                const textSize = parseInt(textSizeRange.value);
+                const textOpacity = parseFloat(textOpacityRange.value) / 100;
+
+                textSizeVal.textContent = textSize;
+                textOpacityVal.textContent = Math.round(textOpacity * 100);
+
+                ctx.save();
+                ctx.globalAlpha = textOpacity;
+                ctx.font = `bold ${textSize}px Tajawal, sans-serif`;
+                ctx.fillStyle = currentTextColor;
+                ctx.textAlign = 'center';
+                ctx.shadowColor = 'rgba(0,0,0,0.7)';
+                ctx.shadowBlur = 8;
+                ctx.fillText(safeText, textX, textY);
+                ctx.restore();
+            }
+        }
+    </script>
+    <script>
+        // --- الدفعة الرابعة: منع الرسم فوق العناصر، أزرار الرئيسية وإعادة التعيين والتنزيل ---
+
+        addLayerImageBtn.addEventListener('click', () => {
+            imageSourceModal.style.display = 'flex';
+        });
+
+        pickFromGalleryBtn.addEventListener('click', () => {
+            closeImageSourceModal();
+            layerImageInput.click();
+        });
+
+        pickFromUrlBtn.addEventListener('click', () => {
+            closeImageSourceModal();
+            urlInputModal.style.display = 'flex';
+        });
+
+        confirmImageUrlBtn.addEventListener('click', () => {
+            const url = imageUrlInput.value.trim();
+            if (!url) return;
+
+            // 🛡️ حماية قوية ضد الروابط الخبيثة
+            if (!isSafeImageUrl(url)) {
+                showAlert("رابط غير آمن 🛡️", "يُسمح فقط بروابط http أو https المباشرة للصور.");
+                return;
+            }
+
+            const newImg = new Image();
+            newImg.crossOrigin = "anonymous";
+            newImg.onload = () => {
+                if (newImg.width === 0 || newImg.height === 0) {
+                    showAlert("صورة غير صالحة ⚠️", "الرابط لا يحتوي على صورة صحيحة.");
+                    return;
+                }
+                const aspect = newImg.height / newImg.width;
+                const defaultW = Math.min(canvas.width * 0.5, 300);
+                const defaultH = defaultW * aspect;
+
+                layers.push({
+                    type: 'image',
+                    img: newImg,
+                    x: (canvas.width - defaultW) / 2,
+                    y: (canvas.height - defaultH) / 2,
+                    w: defaultW,
+                    h: defaultH,
+                    opacity: 1.0,
+                    borderRadius: 0
+                });
+
+                activeLayerIndex = layers.length - 1;
+                imageUrlInput.value = '';
+                closeUrlInputModal();
+                updateLayersUI();
+                renderScratchCanvas();
+            };
+            newImg.onerror = () => {
+                showAlert("خطأ في الرابط ⚠️", "تعذر تحميل الصورة من الرابط المباشر المدخل!");
+            };
+            newImg.src = url;
+        });
+
+        layerImageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (file.size > 15 * 1024 * 1024) {
+                showAlert("حجم كبير ⚠️", "يرجى اختيار صورة أقل من 15 ميجابايت.");
+                layerImageInput.value = '';
+                return;
+            }
+
+            validateImageMagicBytes(file, function(isValid) {
+                if (!isValid) {
+                    showAlert("حظر أمني 🛡️", "الملف المرفوع ليس صورة حقيقية صالحة!");
+                    layerImageInput.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    const newImg = new Image();
+                    newImg.onload = () => {
+                        const aspect = newImg.height / newImg.width;
+                        const defaultW = Math.min(canvas.width * 0.5, 300);
+                        const defaultH = defaultW * aspect;
+
+                        layers.push({
+                            type: 'image',
+                            img: newImg,
+                            x: (canvas.width - defaultW) / 2,
+                            y: (canvas.height - defaultH) / 2,
+                            w: defaultW,
+                            h: defaultH,
+                            opacity: 1.0,
+                            borderRadius: 0
+                        });
+
+                        activeLayerIndex = layers.length - 1;
+                        updateLayersUI();
+                        renderScratchCanvas();
+                    };
+                    newImg.src = ev.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        imgRadiusRange.addEventListener('input', () => {
+            const val = parseInt(imgRadiusRange.value);
+            imgRadiusVal.textContent = val;
+            if (activeLayerIndex >= 0 && layers[activeLayerIndex] && layers[activeLayerIndex].type === 'image') {
+                layers[activeLayerIndex].borderRadius = val;
+                renderScratchCanvas();
+            }
+        });
+
+        function addShapeLayer(shapeType) {
+            const defaultSize = Math.min(canvas.width, canvas.height) * 0.25;
+            layers.push({
+                type: 'shape',
+                shape: shapeType,
+                x: (canvas.width - defaultSize) / 2,
+                y: (canvas.height - defaultSize) / 2,
+                w: defaultSize,
+                h: defaultSize,
+                color: '#000000',
+                opacity: 1.0
+            });
+            activeLayerIndex = layers.length - 1;
+            updateLayersUI();
+            renderScratchCanvas();
+        }
+
+        function setShapeColor(color) {
+            if (activeLayerIndex >= 0 && layers[activeLayerIndex] && layers[activeLayerIndex].type === 'shape') {
+                layers[activeLayerIndex].color = color;
+                renderScratchCanvas();
+            }
+        }
+
+        function setBrushColor(color) {
+            brushColor = color;
+            isDrawingMode = true;
+        }
+
+        document.getElementById('brushSizeRange').addEventListener('input', (e) => {
+            brushSize = parseInt(e.target.value);
+            document.getElementById('brushSizeVal').textContent = brushSize;
+        });
+
+        function clearDrawings() {
+            freehandPaths = [];
+            renderScratchCanvas();
+        }
+
+        function addNewTextLayer(defaultText = 'نص جديد') {
+            const textSize = parseInt(scratchTextSizeRange.value) || 40;
+            ctx.font = `bold ${textSize}px Tajawal, sans-serif`;
+            const metrics = ctx.measureText(defaultText);
+
+            const newLayer = {
+                type: 'text',
+                text: defaultText,
+                x: canvas.width / 2,
+                y: canvas.height / 2,
+                size: textSize,
+                color: '#000000',
+                boxWidth: Math.max(metrics.width + 40, 180),
+                opacity: 1.0
+            };
+
+            layers.push(newLayer);
+            activeLayerIndex = layers.length - 1;
+            syncScratchTextInputs();
+            updateLayersUI();
+            renderScratchCanvas();
+        }
+
+        addNewTextLayerBtn.addEventListener('click', () => { addNewTextLayer('نص جديد'); });
+
+        document.querySelectorAll('.tool-btn[data-target]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetId = btn.getAttribute('data-target');
+                const parentToolbar = btn.parentElement;
+
+                parentToolbar.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.panel-section').forEach(p => p.style.display = 'none');
+
+                btn.classList.add('active');
+                document.getElementById(targetId).style.display = 'flex';
+
+                isDrawingMode = (targetId === 'drawPanel');
+
+                if (targetId === 'layersPanel') updateLayersUI();
+                if (targetId === 'compressPanel') updateEstimatedSize();
+            });
+        });
+
+        // محرك الرسم مع التحقق من عدم الرسم فوق العناصر
+        function renderScratchCanvas() {
+            if (mode !== 'scratch') return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = scratchCanvasColor;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 1. رسم مسارات الرسم الحر (دائماً خلف العناصر تماماً)
+            freehandPaths.forEach(path => {
+                if (path.points.length < 2) return;
+                ctx.save();
+                ctx.strokeStyle = path.color;
+                ctx.lineWidth = path.size;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.beginPath();
+                ctx.moveTo(path.points[0].x, path.points[0].y);
+                for (let i = 1; i < path.points.length; i++) {
+                    ctx.lineTo(path.points[i].x, path.points[i].y);
+                }
+                ctx.stroke();
+                ctx.restore();
+            });
+
+            // 2. رسم جميع الطبقات فوق مسارات الرسم
+            layers.forEach((layer, index) => {
+                ctx.save();
+                ctx.globalAlpha = layer.opacity !== undefined ? layer.opacity : 1.0;
+
+                if (layer.type === 'image') {
+                    if (layer.borderRadius && layer.borderRadius > 0) {
+                        ctx.save();
+                        ctx.beginPath();
+                        ctx.roundRect(layer.x, layer.y, layer.w, layer.h, layer.borderRadius);
+                        ctx.clip();
+                        ctx.drawImage(layer.img, layer.x, layer.y, layer.w, layer.h);
+                        ctx.restore();
+                    } else {
+                        ctx.drawImage(layer.img, layer.x, layer.y, layer.w, layer.h);
+                    }
+                } else if (layer.type === 'shape') {
+                    ctx.fillStyle = layer.color;
+                    ctx.strokeStyle = layer.color;
+                    ctx.lineWidth = 4;
+
+                    if (layer.shape === 'rect') {
+                        ctx.fillRect(layer.x, layer.y, layer.w, layer.h);
+                    } else if (layer.shape === 'circle') {
+                        ctx.beginPath();
+                        ctx.arc(layer.x + layer.w / 2, layer.y + layer.h / 2, Math.min(layer.w, layer.h) / 2, 0, Math.PI * 2);
+                        ctx.fill();
+                    } else if (layer.shape === 'triangle') {
+                        ctx.beginPath();
+                        ctx.moveTo(layer.x + layer.w / 2, layer.y);
+                        ctx.lineTo(layer.x + layer.w, layer.y + layer.h);
+                        ctx.lineTo(layer.x, layer.y + layer.h);
+                        ctx.closePath();
+                        ctx.fill();
+                    } else if (layer.shape === 'line') {
+                        ctx.beginPath();
+                        ctx.moveTo(layer.x, layer.y + layer.h / 2);
+                        ctx.lineTo(layer.x + layer.w, layer.y + layer.h / 2);
+                        ctx.stroke();
+                    } else if (layer.shape === 'arrow') {
+                        const midY = layer.y + layer.h / 2;
+                        ctx.beginPath();
+                        ctx.moveTo(layer.x, midY);
+                        ctx.lineTo(layer.x + layer.w * 0.7, midY);
+                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.moveTo(layer.x + layer.w * 0.6, layer.y);
+                        ctx.lineTo(layer.x + layer.w, midY);
+                        ctx.lineTo(layer.x + layer.w * 0.6, layer.y + layer.h);
+                        ctx.fill();
+                    }
+                } else if (layer.type === 'text') {
+                    const safeText = sanitizeInput(layer.text);
+                    ctx.font = `bold ${layer.size}px Tajawal, sans-serif`;
+                    ctx.fillStyle = layer.color;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+
+                    const words = safeText.split(' ');
+                    let line = '';
+                    let lines = [];
+                    for (let n = 0; n < words.length; n++) {
+                        let testLine = line + words[n] + ' ';
+                        let metrics = ctx.measureText(testLine);
+                        if (metrics.width > layer.boxWidth && n > 0) {
+                            lines.push(line);
+                            line = words[n] + ' ';
+                        } else {
+                            line = testLine;
+                        }
+                    }
+                    lines.push(line);
+
+                    const lineHeight = layer.size * 1.25;
+                    layer.height = lines.length * lineHeight;
+
+                    lines.forEach((l, i) => {
+                        ctx.fillText(l.trim(), layer.x, layer.y + (i * lineHeight));
+                    });
+                }
+                ctx.restore();
+
+                if (index === activeLayerIndex) {
+                    drawLayerSelectionBox(layer);
+                }
+            });
+
+            if (activeLayerIndex >= 0 && activeLayerIndex < layers.length) {
+                floatingActionBar.style.display = 'flex';
+            } else {
+                floatingActionBar.style.display = 'none';
+            }
+        }
+
+        function drawLayerSelectionBox(layer) {
+            ctx.save();
+            ctx.strokeStyle = '#8b5cf6';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([6, 4]);
+
+            let x = layer.x;
+            let y = layer.y;
+            let w = layer.w || layer.boxWidth;
+            let h = layer.h || layer.height;
+
+            if (layer.type === 'text') {
+                x = layer.x - w / 2;
+            }
+
+            ctx.strokeRect(x, y, w, h);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.strokeStyle = '#8b5cf6';
+            ctx.setLineDash([]);
+            ctx.lineWidth = 2.5;
+
+            const handleRadius = 14;
+            ctx.beginPath();
+            ctx.arc(x + w, y + h, handleRadius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            if (layer.type === 'text') {
+                ctx.beginPath();
+                ctx.roundRect(x + w - 4, y + h / 2 - 12, 8, 24, 4);
+                ctx.fill();
+                ctx.stroke();
+            }
+
+            ctx.restore();
+        }
+
+        function updateLayersUI() {
+            const container = document.getElementById('layersContainerList');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (layers.length === 0) {
+                container.innerHTML = '<p style="font-size:0.75rem; color:#64748b; text-align:center;">لا توجد طبقات حالياً</p>';
+                return;
+            }
+
+            layers.slice().reverse().forEach((layer, revIndex) => {
+                const index = layers.length - 1 - revIndex;
+                const row = document.createElement('div');
+                row.className = 'layer-row';
+                if (index === activeLayerIndex) row.style.borderColor = '#8b5cf6';
+
+                let name = layer.type === 'text'
+                    ? ('✍️ ' + sanitizeInput(String(layer.text || '').substring(0, 12)))
+                    : (layer.type === 'image' ? '🖼️ صورة' : ('🔷 شكل (' + sanitizeInput(String(layer.shape || '')) + ')'));
+
+                row.innerHTML = `
+                    <span>${name}</span>
+                    <div>
+                        <button onclick="moveLayerUp(${index})">⬆️</button>
+                        <button onclick="moveLayerDown(${index})">⬇️</button>
+                        <button onclick="deleteLayerByIndex(${index})" style="color:#ef4444;">🗑️</button>
+                    </div>
+                `;
+                row.onclick = (e) => {
+                    if (e.target.tagName !== 'BUTTON') {
+                        activeLayerIndex = index;
+                        syncScratchTextInputs();
+                        renderScratchCanvas();
+                        updateLayersUI();
+                    }
+                };
+                container.appendChild(row);
+            });
+        }
+
+        function moveLayerUp(index) {
+            if (index < layers.length - 1) {
+                const temp = layers[index];
+                layers[index] = layers[index + 1];
+                layers[index + 1] = temp;
+                activeLayerIndex = index + 1;
+                renderScratchCanvas();
+                updateLayersUI();
+            }
+        }
+
+        function moveLayerDown(index) {
+            if (index > 0) {
+                const temp = layers[index];
+                layers[index] = layers[index - 1];
+                layers[index - 1] = temp;
+                activeLayerIndex = index - 1;
+                renderScratchCanvas();
+                updateLayersUI();
+            }
+        }
+
+        function deleteLayerByIndex(index) {
+            layers.splice(index, 1);
+            activeLayerIndex = -1;
+            syncScratchTextInputs();
+            renderScratchCanvas();
+            updateLayersUI();
+        }
+
+        function syncScratchTextInputs() {
+            const imageAdjustPanel = document.getElementById('imageAdjustLayerPanel');
+            if (activeLayerIndex >= 0 && layers[activeLayerIndex]) {
+                const layer = layers[activeLayerIndex];
+                if (layer.type === 'text') {
+                    scratchTextInput.value = layer.text;
+                    scratchTextSizeRange.value = layer.size;
+                    scratchTextSizeVal.textContent = layer.size;
+                    if(imageAdjustPanel) imageAdjustPanel.style.display = 'none';
+                } else if (layer.type === 'image') {
+                    if(imageAdjustPanel) imageAdjustPanel.style.display = 'flex';
+                    imgRadiusRange.value = layer.borderRadius || 0;
+                    imgRadiusVal.textContent = layer.borderRadius || 0;
+                } else {
+                    if(imageAdjustPanel) imageAdjustPanel.style.display = 'none';
+                }
+                elementOpacityRange.value = Math.round((layer.opacity !== undefined ? layer.opacity : 1) * 100);
+                elementOpacityVal.textContent = elementOpacityRange.value;
+            } else {
+                scratchTextInput.value = '';
+                if(imageAdjustPanel) imageAdjustPanel.style.display = 'none';
+            }
+        }
+
+        scratchTextInput.addEventListener('input', () => {
+            if (activeLayerIndex >= 0 && layers[activeLayerIndex] && layers[activeLayerIndex].type === 'text') {
+                // تخزين النص كما هو للعرض على Canvas مع تعقيم عند الرسم وفي قائمة الطبقات
+                layers[activeLayerIndex].text = String(scratchTextInput.value || '').slice(0, 100);
+                renderScratchCanvas();
+                updateLayersUI();
+            }
+        });
+
+        scratchTextSizeRange.addEventListener('input', () => {
+            const val = parseInt(scratchTextSizeRange.value);
+            scratchTextSizeVal.textContent = val;
+            if (activeLayerIndex >= 0 && layers[activeLayerIndex] && layers[activeLayerIndex].type === 'text') {
+                layers[activeLayerIndex].size = val;
+                renderScratchCanvas();
+            }
+        });
+
+        elementOpacityRange.addEventListener('input', () => {
+            const val = parseInt(elementOpacityRange.value);
+            elementOpacityVal.textContent = val;
+            if (activeLayerIndex >= 0 && layers[activeLayerIndex]) {
+                layers[activeLayerIndex].opacity = val / 100;
+                renderScratchCanvas();
+            }
+        });
+
+        function setScratchTextColor(color) {
+            if (activeLayerIndex >= 0 && layers[activeLayerIndex] && layers[activeLayerIndex].type === 'text') {
+                layers[activeLayerIndex].color = color;
+                renderScratchCanvas();
+            }
+        }
+
+        function setCanvasBgColor(color) {
+            scratchCanvasColor = color;
+            renderScratchCanvas();
+        }
+
+        deleteLayerBtn.addEventListener('click', () => {
+            if (activeLayerIndex >= 0) {
+                deleteLayerByIndex(activeLayerIndex);
+            }
+        });
+
+        function getCanvasCoordinates(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
+        }
+
+        function isPointInHandle(pos, layer) {
+            let x = layer.x;
+            let y = layer.y;
+            let w = layer.w || layer.boxWidth;
+            let h = layer.h || layer.height;
+
+            if (layer.type === 'text') {
+                x = layer.x - w / 2;
+            }
+
+            const handleX = x + w;
+            const handleY = y + h;
+            const dist = Math.hypot(pos.x - handleX, pos.y - handleY);
+            return dist <= 28;
+        }
+
+        function isPointInLayer(pos, layer) {
+            let x = layer.x;
+            let y = layer.y;
+            let w = layer.w || layer.boxWidth;
+            let h = layer.h || layer.height;
+
+            if (layer.type === 'text') {
+                x = layer.x - w / 2;
+            }
+
+            return pos.x >= x && pos.x <= x + w && pos.y >= y && pos.y <= y + h;
+        }
+
+        function handlePointerStart(e) {
+            if (mode !== 'scratch') return;
+            const pos = getCanvasCoordinates(e);
+
+            // 🛡️ التحقق من عدم بدء الرسم إذا كان المؤشر فوق أي عنصر موجود
+            if (isDrawingMode) {
+                let touchedOnElement = false;
+                for (let i = layers.length - 1; i >= 0; i--) {
+                    if (isPointInLayer(pos, layers[i])) {
+                        touchedOnElement = true;
+                        break;
+                    }
+                }
+                if (touchedOnElement) {
+                    return; // منع الرسم فوق العناصر تماماً
+                }
+                currentPath = { color: brushColor, size: brushSize, points: [pos] };
+                freehandPaths.push(currentPath);
+                return;
+            }
+
+            if (activeLayerIndex >= 0 && layers[activeLayerIndex]) {
+                const activeLayer = layers[activeLayerIndex];
+                if (isPointInHandle(pos, activeLayer)) {
+                    isResizing = true;
+                    dragStartX = pos.x;
+                    dragStartY = pos.y;
+                    return;
+                }
+            }
+
+            let foundIndex = -1;
+            for (let i = layers.length - 1; i >= 0; i--) {
+                if (isPointInLayer(pos, layers[i])) {
+                    foundIndex = i;
+                    break;
+                }
+            }
+
+            if (foundIndex !== -1) {
+                activeLayerIndex = foundIndex;
+                isDragging = true;
+                dragStartX = pos.x;
+                dragStartY = pos.y;
+                syncScratchTextInputs();
+            } else {
+                activeLayerIndex = -1;
+                syncScratchTextInputs();
+            }
+
+            renderScratchCanvas();
+        }
+
+        function handlePointerMove(e) {
+            if (mode !== 'scratch') return;
+            const pos = getCanvasCoordinates(e);
+
+            if (isDrawingMode && currentPath) {
+                currentPath.points.push(pos);
+                renderScratchCanvas();
+                return;
+            }
+
+            if (isResizing && activeLayerIndex >= 0) {
+                const layer = layers[activeLayerIndex];
+                const dx = pos.x - dragStartX;
+
+                if (layer.type === 'image' || layer.type === 'shape') {
+                    const aspect = layer.h / layer.w;
+                    layer.w = Math.max(30, layer.w + dx);
+                    layer.h = layer.w * aspect;
+                } else if (layer.type === 'text') {
+                    layer.boxWidth = Math.max(60, layer.boxWidth + dx);
+                }
+
+                dragStartX = pos.x;
+                dragStartY = pos.y;
+                renderScratchCanvas();
+            } else if (isDragging && activeLayerIndex >= 0) {
+                const layer = layers[activeLayerIndex];
+                const dx = pos.x - dragStartX;
+                const dy = pos.y - dragStartY;
+
+                layer.x += dx;
+                layer.y += dy;
+
+                dragStartX = pos.x;
+                dragStartY = pos.y;
+                renderScratchCanvas();
+            }
+        }
+
+        function handlePointerEnd() {
+            isDragging = false;
+            isResizing = false;
+            currentPath = null;
+        }
+
+        canvas.addEventListener('mousedown', handlePointerStart);
+        canvas.addEventListener('mousemove', handlePointerMove);
+        window.addEventListener('mouseup', handlePointerEnd);
+
+        canvas.addEventListener('touchstart', (e) => { handlePointerStart(e); });
+        canvas.addEventListener('touchmove', (e) => { handlePointerMove(e); });
+        window.addEventListener('touchend', handlePointerEnd);
+
+        [brightnessRange, contrastRange, saturateRange, hueRange].forEach(slider => {
+            slider.addEventListener('input', () => {
+                brightnessVal.textContent = brightnessRange.value;
+                contrastVal.textContent = contrastRange.value;
+                saturateVal.textContent = saturateRange.value;
+                hueVal.textContent = hueRange.value;
+                processImageDrawing();
+            });
+        });
+
+        function applyPreset(type) {
+            if (type === 'normal') { brightnessRange.value = 100; contrastRange.value = 100; saturateRange.value = 100; hueRange.value = 0; }
+            else if (type === 'warm') { brightnessRange.value = 105; contrastRange.value = 110; saturateRange.value = 120; hueRange.value = 15; }
+            else if (type === 'cold') { brightnessRange.value = 100; contrastRange.value = 110; saturateRange.value = 90; hueRange.value = -20; }
+            else if (type === 'bw') { brightnessRange.value = 100; contrastRange.value = 120; saturateRange.value = 0; hueRange.value = 0; }
+            else if (type === 'cinematic') { brightnessRange.value = 95; contrastRange.value = 135; saturateRange.value = 110; hueRange.value = -10; }
+
+            brightnessVal.textContent = brightnessRange.value;
+            contrastVal.textContent = contrastRange.value;
+            saturateVal.textContent = saturateRange.value;
+            hueVal.textContent = hueRange.value;
+            processImageDrawing();
+        }
+
+        function cropImage(w, h) {
+            if (w === 'circle') currentCropAspect = 'circle';
+            else currentCropAspect = { w: w, h: h };
+            processImageDrawing();
+        }
+
+        function rotateImage() { rotationAngle = (rotationAngle + 90) % 360; processImageDrawing(); }
+        function setFrameStyle(color) { currentFrameColor = color; processImageDrawing(); }
+        function setTextColor(color) { currentTextColor = color; processImageDrawing(); }
+
+        function updateEstimatedSize() {
+            const format = outputFormat.value;
+            const quality = parseFloat(qualityRange.value);
+            qualityVal.textContent = Math.round(quality * 100);
+
+            const dataUrl = canvas.toDataURL(format, quality);
+            const base64Length = dataUrl.length - (dataUrl.indexOf(',') + 1);
+            const blobSize = (base64Length * 3) / 4;
+            newSizeSpan.textContent = (blobSize / 1024).toFixed(1) + ' KB';
+        }
+
+        frameWidthRange.addEventListener('input', processImageDrawing);
+        textSizeRange.addEventListener('input', processImageDrawing);
+        textOpacityRange.addEventListener('input', processImageDrawing);
+        textInput.addEventListener('input', processImageDrawing);
+
+        // زر إعادة التعيين في النمط الكلاسيكي
+        resetTriggerBtnClassic.addEventListener('click', () => {
+            showAlert("تنبيه إعادة الضبط ⚠️", "هل أنت متأكد من إلغاء التعديلات؟", true, () => {
+                resetValuesToDefault();
+                rotationAngle = 0;
+                currentCropAspect = 0;
+                textInput.value = '';
+                processImageDrawing();
+            });
+        });
+
+        // زر إعادة التعيين في النمط الحر
+        resetScratchBtn.addEventListener('click', () => {
+            showAlert("تنبيه إعادة الضبط ⚠️", "هل أنت متأكد من مسح اللوحة والبدء من جديد؟", true, () => {
+                scratchCanvasColor = '#ffffff';
+                layers = [];
+                freehandPaths = [];
+                activeLayerIndex = -1;
+                renderScratchCanvas();
+            });
+        });
+
+        // زر العودة للرئيسية وإظهار الشاشة الرئيسية
+        homeTriggerBtn.addEventListener('click', () => {
+            showAlert("تنبيه المغادرة ⚠️", "هل تريد العودة للرئيسية؟", true, () => {
+                mainWelcomeSection.style.display = 'block';
+                subtitleText.style.display = 'block';
+                previewBox.style.display = 'none';
+                classicToolbar.style.display = 'none';
+                scratchToolbar.style.display = 'none';
+                actionButtons.style.display = 'none';
+                homeTriggerBtn.style.display = 'none';
+                document.querySelectorAll('.panel-section').forEach(p => p.style.display = 'none');
+                imageInput.value = '';
+                layerImageInput.value = '';
+            });
+        });
+
+        function resetValuesToDefault() {
+            brightnessRange.value = 100;
+            contrastRange.value = 100;
+            saturateRange.value = 100;
+            hueRange.value = 0;
+            brightnessVal.textContent = 100;
+            contrastVal.textContent = 100;
+            saturateVal.textContent = 100;
+            hueVal.textContent = 0;
+            frameWidthRange.value = 0;
+            textSizeRange.value = 30;
+            textOpacityRange.value = 100;
+            qualityRange.value = 0.8;
+            outputFormat.value = "image/webp";
+        }
+
+        downloadBtn.addEventListener('click', function() {
+            const oldActive = activeLayerIndex;
+            activeLayerIndex = -1;
+            if (mode === 'scratch') renderScratchCanvas();
+
+            if (mode === 'classic') {
+                document.getElementById('beforeImg').src = img.src;
+                document.getElementById('beforeItem').style.display = 'flex';
+                document.getElementById('afterItemSingle').style.gridColumn = 'span 1';
+            } else {
+                document.getElementById('beforeItem').style.display = 'none';
+                document.getElementById('afterItemSingle').style.gridColumn = 'span 2';
+            }
+            document.getElementById('afterImg').src = canvas.toDataURL();
+            document.getElementById('compareModal').style.display = 'flex';
+
+            activeLayerIndex = oldActive;
+        });
+
+        confirmDownloadBtn.addEventListener('click', function() {
+            const format = outputFormat.value || 'image/png';
+            const quality = parseFloat(qualityRange.value) || 0.9;
+            const ext = format.split('/')[1] || 'png';
+
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `vexlii-pro-${Date.now()}.${ext}`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                closeCompareModal();
+            }, format, quality);
+        });
+
+        // ==================== القائمة المنبثقة (الهمبرغر) ====================
+        function openBottomSheet() {
+            bottomSheetOverlay.classList.add('show');
+            menuToggleBtn.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeBottomSheet() {
+            bottomSheetOverlay.classList.remove('show');
+            menuToggleBtn.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        menuToggleBtn.addEventListener('click', () => {
+            if (bottomSheetOverlay.classList.contains('show')) {
+                closeBottomSheet();
+            } else {
+                openBottomSheet();
+            }
+        });
+
+        closeBottomSheetBtn.addEventListener('click', closeBottomSheet);
+
+        bottomSheetOverlay.addEventListener('click', (e) => {
+            if (e.target === bottomSheetOverlay) {
+                closeBottomSheet();
+            }
+        });
+
+        // تسجيل Service Worker لتجربة شبيهة بالتطبيق
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('./sw.js').catch(function() {});
+            });
+        }
+
+        // ==================== شريط تثبيت التطبيق (يظهر في كل زيارة) ====================
+        (function setupInstallBanner() {
+            const banner = document.getElementById('installBanner');
+            const installBtn = document.getElementById('installAppBtn');
+            const dismissBtn = document.getElementById('installDismissBtn');
+            const hintEl = document.getElementById('installBannerHint');
+            if (!banner || !installBtn || !dismissBtn) return;
+
+            let deferredPrompt = null;
+            let dismissedThisSession = false;
+
+            function isStandalone() {
+                return window.matchMedia('(display-mode: standalone)').matches ||
+                    window.navigator.standalone === true;
+            }
+
+            function showBanner() {
+                // لا يظهر إذا كان مفتوحاً كتطبيق مثبت، أو أُغلق في نفس الجلسة
+                if (isStandalone() || dismissedThisSession) return;
+                banner.classList.add('show');
+                document.body.classList.add('has-install-banner');
+            }
+
+            function hideBanner() {
+                banner.classList.remove('show');
+                document.body.classList.remove('has-install-banner');
+                dismissedThisSession = true;
+            }
+
+            const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+            // iOS: إرشاد يدوي (لا يوجد حدث تثبيت تلقائي)
+            if (isIOS && !isStandalone()) {
+                hintEl.textContent = 'من Safari: مشاركة ← إضافة إلى الشاشة الرئيسية';
+                installBtn.textContent = 'كيف؟';
+                installBtn.onclick = function() {
+                    showAlert(
+                        'تثبيت على الآيفون 📱',
+                        '1) اضغط زر المشاركة (□↑) في أسفل Safari\n2) اختر «إضافة إلى الشاشة الرئيسية»\n3) اضغط إضافة'
+                    );
+                };
+                setTimeout(showBanner, 1000);
+            }
+
+            // Chrome / Edge / Android / سطح المكتب
+            window.addEventListener('beforeinstallprompt', function(e) {
+                e.preventDefault();
+                deferredPrompt = e;
+                if (!isStandalone()) {
+                    hintEl.textContent = 'يفتح بسرعة من سطح المكتب أو الشاشة الرئيسية';
+                    installBtn.textContent = 'تثبيت';
+                    setTimeout(showBanner, 600);
+                }
+            });
+
+            // إن لم يظهر beforeinstallprompt (بعض المتصفحات): نعرض الشريط كإرشاد
+            setTimeout(function() {
+                if (!deferredPrompt && !isIOS && !isStandalone()) {
+                    hintEl.textContent = 'من قائمة المتصفح: تثبيت التطبيق / إضافة إلى الشاشة الرئيسية';
+                    installBtn.textContent = 'حسناً';
+                    installBtn.onclick = function() { hideBanner(); };
+                    showBanner();
+                }
+            }, 2500);
+
+            installBtn.addEventListener('click', async function() {
+                if (!deferredPrompt) return;
+                deferredPrompt.prompt();
+                try {
+                    const choice = await deferredPrompt.userChoice;
+                    if (choice && choice.outcome === 'accepted') hideBanner();
+                } catch (e) {}
+                deferredPrompt = null;
+            });
+
+            dismissBtn.addEventListener('click', hideBanner);
+
+            window.addEventListener('appinstalled', function() {
+                hideBanner();
+                deferredPrompt = null;
+            });
+        })();
+    </script>
+</body>
+</html>
